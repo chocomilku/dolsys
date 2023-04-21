@@ -1,0 +1,15 @@
+{
+	"name": "server",
+	"main": "server.ts",
+	"scripts": {
+		"server:start": "ts-node .",
+		"server:dev": "ts-node-dev --respawn."
+	},
+	"dependencies": {
+		"dotenv": "^16.0.3",
+		"express": "^4.18.2"
+	},
+	"devDependencies": {
+		"@types/express": "^4.17.17"
+	}
+}
