@@ -1,11 +1,10 @@
 import { Request, Response, Router } from "express";
+import path from "path";
 
 const router = Router();
 
 router.get("/", (req: Request, res: Response) => {
-	res.status(200).json({
-		message: "Hello World!",
-	});
+	res.sendFile("index.html", { root: path.join(__dirname, "../../public") });
 });
 
 export const indexRoute: Router = router;
