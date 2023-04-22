@@ -1,10 +1,7 @@
 import { NextFunction, Request, Response, Router } from "express";
-import multer from "multer";
-import path from "path";
+import { upload } from "../../middleware/multer/upload";
 
 const router: Router = Router();
-
-const upload = multer({ dest: "../uploads" });
 
 router.get("/", (req, res: Response, next) => {
 	res.status(501).json({
