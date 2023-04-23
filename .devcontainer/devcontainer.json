@@ -14,7 +14,17 @@
 	// "features": {},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
+	"forwardPorts": [3000, 3001],
+	"portsAttributes": {
+		"3000": {
+			"label": "Express",
+			"onAutoForward": "notify"
+		},
+		"3001": {
+			"label": "Vite + React",
+			"onAutoForward": "notify"
+		}
+	},
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "yarn install",

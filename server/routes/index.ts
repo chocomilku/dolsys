@@ -5,8 +5,8 @@ import { dlRoutes } from "./dl";
 
 const router: Router = Router();
 
-router.use("/upload", uploadRoutes);
-router.use("/", indexRoute);
-router.use("/", dlRoutes);
+router.use("/upload", uploadRoutes); // POST /upload
+router.use("/", indexRoute); // GET / (upload form)
+router.use("/", dlRoutes); // GET /:uid
 
 export const routes: Router = router;
