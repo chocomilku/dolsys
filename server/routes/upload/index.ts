@@ -6,12 +6,6 @@ import { db } from "../../middleware/knex/credentials";
 
 const router: Router = Router();
 
-router.get("/", (req, res: Response, next) => {
-	res.status(501).json({
-		message: "hmmmge",
-	});
-});
-
 router.post(
 	"/",
 	upload.single("file"),

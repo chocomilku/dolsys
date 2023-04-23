@@ -8,4 +8,5 @@ export interface FileMetadataWithID extends Omit<FileMetadata, "uid"> {
 	id: number;
 	created_at: Date;
 	uid: string;
+	downloadCount: number;
 }
