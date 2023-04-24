@@ -11,10 +11,9 @@ router.get("/:uid", async (req, res, next) => {
 
 	if (!file[0]) return res.status(404).json({ message: "File not found" });
 
-	const increment = await db<FileMetadataWithID>("files")
+	await db<FileMetadataWithID>("files")
 		.where({ uid })
 		.increment("downloadCount", 1);
-	console.log(increment);
 
 	res.download(file[0].path, file[0].originalname);
 });
