@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from "react"
 import { uploadFile } from "../controllers/uploadFile"
+import QRCode from "react-qr-code";
 
 function App() {
 
@@ -32,6 +33,9 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         <input type="submit" value="Upload" />
       </form>
       <a href={returnLink}>{returnLink}</a>
+      {
+        returnLink && <QRCode value={returnLink} />
+      }
     </>
   )
   }
