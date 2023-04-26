@@ -37,6 +37,13 @@
 					"permissions": "write-all"
 				}
 			}
+		},
+		"vscode": {
+			"extensions": [
+				"GitHub.copilot",
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode"
+			]
 		}
 	}
 

@@ -4,20 +4,20 @@ import QRCode from "react-qr-code";
 
 function App() {
 
-const [formData, setFormData] = useState<File>()
+const [file, setFile] = useState<File>()
 const [returnLink, setReturnLink] = useState("");
 
 
 const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
   if (!event.target.files) return;
-  setFormData(event.target.files[0])
+  setFile(event.target.files[0])
 }
 
 const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!formData) return;
-    const response = await uploadFile(formData);
-    const uploadedUID = response.data.uid
+    if (!file) return;
+    const response = await uploadFile(file);
+    const uploadedUID = response.data.uid;
 
     setReturnLink(`http://localhost:3000/${uploadedUID}`)
   }
