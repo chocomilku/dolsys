@@ -3,7 +3,9 @@ import { Request, Response, Router } from "express";
 const router = Router();
 
 router.get("/", (req: Request, res: Response) => {
-	res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
+	res.status(200).json({
+		message: "Hello, world!",
+	});
 });
 
 export const indexRoute: Router = router;
