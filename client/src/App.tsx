@@ -1,9 +1,9 @@
 import { ChangeEvent, FormEvent, useState } from "react"
 import { uploadFile } from "../controllers/uploadFile"
 import QRCode from "react-qr-code";
-import LoginButton from "../routes/login"
-import LogoutButton from "../routes/logout"
-import Profile from "../routes/profile"
+import LoginButton from "../components/Login"
+import LogoutButton from "../components/Logout"
+import Profile from "../components/Profile"
 
 function App() {
 
