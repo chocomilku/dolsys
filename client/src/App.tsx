@@ -1,6 +1,9 @@
 import { ChangeEvent, FormEvent, useState } from "react"
 import { uploadFile } from "../controllers/uploadFile"
 import QRCode from "react-qr-code";
+import LoginButton from "../routes/login"
+import LogoutButton from "../routes/logout"
+import Profile from "../routes/profile"
 
 function App() {
 
@@ -26,6 +29,10 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
   return (
     <>
       <h1>ewan</h1> 
+
+      <LoginButton />
+      <LogoutButton />
+      <Profile />
 
       <form onSubmit={handleSubmit}>
         <input type="file" name="file" onChange={handleFileSelect} />
