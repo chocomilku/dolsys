@@ -3,11 +3,18 @@ import { Router, Request, Response } from "express";
 
 const router = Router();
 
-router.get("/", requiresAuth(), (req: Request, res: Response) => {
-	const userData = req.oidc.user;
-	if (!userData) return res.status(500).send("No user data found");
+router.get(
+	"/",
+	requiresAuth(() => false),
+	(req: Request, res: Response) => {
+		const userData = req.oidc.user;
+		if (!userData)
+			return res.status(403).json({
+				message: "Not Authenticated",
+			});
 
-	res.send("Hi " + userData.name + "!");
-});
+		res.status(200).json(userData);
+	}
+);
 
 export const profileRoute: Router = router;
