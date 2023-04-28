@@ -1,13 +1,13 @@
 import { Request, Response, Router } from "express";
 import { authMiddleware } from "../middleware/jwt-bearer/authOptions";
-import { requiredScopes } from "express-oauth2-jwt-bearer";
+import { checkRequiredPermissions } from "../middleware/auth0/checkPermissions";
 
 const router = Router();
 
 router.get(
 	"/",
 	authMiddleware,
-	requiredScopes("view:files"),
+	checkRequiredPermissions(["view:files"]),
 	(req: Request, res: Response) => {
 		res.status(200).json({
 			message: "Hello, world!",
