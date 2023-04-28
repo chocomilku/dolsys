@@ -1,14 +1,36 @@
-import { ChangeEvent, FormEvent, useState } from "react"
+import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { uploadFile } from "../controllers/uploadFile"
 import QRCode from "react-qr-code";
 import LoginButton from "../components/Login"
 import LogoutButton from "../components/Logout"
 import Profile from "../components/Profile"
+import { useAuth0 } from "@auth0/auth0-react";
+import axios from "axios";
 
 function App() {
 
 const [file, setFile] = useState<File>()
 const [returnLink, setReturnLink] = useState("");
+const [message, setMessage] = useState<string>("");
+
+const { getAccessTokenSilently } = useAuth0()
+
+useEffect(() => {
+  
+  const getMessage = async () => {
+    const access_token = await getAccessTokenSilently();
+    const data = await axios("http://localhost:3000/", {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${access_token}`
+      }
+    })
+    setMessage(data.data.message)
+  }
+
+  getMessage();
+})
 
 
 const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
@@ -42,6 +64,9 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
       <a href={returnLink}>{returnLink}</a>
       {
         returnLink && <QRCode value={returnLink} />
+      }
+      {
+        message && <p>{message}</p>
       }
     </>
   )
