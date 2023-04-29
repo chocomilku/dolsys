@@ -5,7 +5,7 @@ import LoginButton from "../components/Login"
 import LogoutButton from "../components/Logout"
 import Profile from "../components/Profile"
 import { useAuth0 } from "@auth0/auth0-react";
-import axios from "axios";
+import { axiosWrapperWithAuthToken } from "../controllers/axios/axiosWrapperWithAuthToken";
 
 function App() {
 
@@ -19,14 +19,15 @@ useEffect(() => {
   
   const getMessage = async () => {
     const access_token = await getAccessTokenSilently();
-    const data = await axios("http://localhost:3000/", {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${access_token}`
-      }
-    })
-    setMessage(data.data.message)
+    const data = await axiosWrapperWithAuthToken<{message: string}>(
+      access_token,
+      {url: "/"}
+      )
+
+    console.log(data)
+
+    setMessage(data.data ? data.data.message : data.error)
+    
   }
 
   getMessage();
