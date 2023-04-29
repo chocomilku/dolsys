@@ -1,5 +1,6 @@
 import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 import { UnauthorizedError } from "express-oauth2-jwt-bearer";
+import { HTTPError } from "./errors";
 
 export const handleErrors: ErrorRequestHandler = (
 	err: Error,
@@ -9,12 +10,12 @@ export const handleErrors: ErrorRequestHandler = (
 	next: NextFunction
 ) => {
 	console.error(err.stack);
-	if (err instanceof UnauthorizedError) {
-		return res.status(err.statusCode).json({
+	if (err instanceof UnauthorizedError || err instanceof HTTPError) {
+		return res.status(err.status).json({
 			error: err.message,
 		});
 	}
-	res.status(500).json({
+	return res.status(500).json({
 		error: "Something went wrong",
 	});
 };
