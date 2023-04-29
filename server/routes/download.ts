@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
-import { db } from "../../middleware/knex/credentials";
-import { FileMetadataWithID } from "../../../interfaces/FileMetadata";
+import { db } from "../middleware/knex/credentials";
+import { FileMetadataWithID } from "../../interfaces/FileMetadata";
 
 const router = Router();
 
