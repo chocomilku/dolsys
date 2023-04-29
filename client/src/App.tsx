@@ -12,7 +12,7 @@ function App() {
 	const [returnLink, setReturnLink] = useState("");
 	const [message, setMessage] = useState<string>("");
 
-	const { getAccessTokenSilently } = useAuth0();
+	const { getAccessTokenSilently, user } = useAuth0();
 
 	useEffect(() => {
 		const getMessage = async () => {
@@ -35,11 +35,14 @@ function App() {
 
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
+		const access_token = await getAccessTokenSilently();
+		if (!user?.sub) return;
 		if (!file) return;
-		const response = await uploadFile(file);
+		const response = await uploadFile(access_token, file, user.sub);
+		if (!response.data) return;
 		const uploadedUID = response.data.uid;
 
-		setReturnLink(`http://localhost:3000/${uploadedUID}`);
+		setReturnLink(`${import.meta.env.VITE_API_URL}/${uploadedUID}`);
 	};
 
 	return (
