@@ -42,7 +42,8 @@
 			"extensions": [
 				"GitHub.copilot",
 				"dbaeumer.vscode-eslint",
-				"esbenp.prettier-vscode"
+				"esbenp.prettier-vscode",
+				"eamodio.gitlens"
 			]
 		}
 	}
