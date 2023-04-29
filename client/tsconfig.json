@@ -17,8 +17,11 @@
 		"strict": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"noFallthroughCasesInSwitch": true
+		"noFallthroughCasesInSwitch": true,
+
+		/* Add vite types globally */
+		"types": ["vite/client"]
 	},
-	"include": ["src", "components", "routes"],
+	"include": ["src", "components", "routes", "controllers"],
 	"references": [{ "path": "./tsconfig.node.json" }]
 }
