@@ -3,7 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 
 import { routes } from "./routes";
-import { handleErrors } from "./middleware/handleErrors";
+import { handleErrors } from "./middleware/errors/handleErrors";
 
 const app: Application = express();
 

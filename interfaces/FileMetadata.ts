@@ -3,6 +3,7 @@ export interface FileMetadata {
 	originalname: string;
 	uid?: string;
 	user_id: string;
+	category_id?: number;
 }
 
 export interface FileMetadataWithID extends Omit<FileMetadata, "uid"> {
@@ -10,4 +11,5 @@ export interface FileMetadataWithID extends Omit<FileMetadata, "uid"> {
 	created_at: Date;
 	uid: string;
 	downloadCount: number;
+	category_id: number;
 }
