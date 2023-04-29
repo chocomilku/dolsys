@@ -1,10 +1,10 @@
-import { Request, Response, NextFunction, Router } from "express";
+import { Request, Response, Router } from "express";
 import { db } from "../../middleware/knex/credentials";
 import { FileMetadataWithID } from "../../../interfaces/FileMetadata";
 
 const router = Router();
 
-router.get("/:uid", async (req, res, next) => {
+router.get("/:uid", async (req: Request, res: Response) => {
 	const { uid } = req.params;
 
 	const file = await db<FileMetadataWithID>("files").where({ uid });

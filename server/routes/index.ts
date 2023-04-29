@@ -2,12 +2,10 @@ import { Router } from "express";
 import { indexRoute } from "./index.route";
 import { uploadRoutes } from "./upload";
 import { dlRoutes } from "./dl";
-import { profileRoute } from "./profile/profile";
 
 const router: Router = Router();
 
 router.use("/upload", uploadRoutes); // POST /upload
-router.use("/profile", profileRoute); // GET /profile
 router.use("/", indexRoute); // GET / (home callback)
 router.use("/", dlRoutes); // GET /:uid
 
