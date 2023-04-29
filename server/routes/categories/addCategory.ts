@@ -7,11 +7,15 @@ import {
 	CategoriesWithoutID,
 } from "../../../interfaces/Categories";
 import { db } from "../../middleware/knex/credentials";
+import { authMiddleware } from "../../middleware/jwt-bearer/authOptions";
+import { checkRequiredPermissions } from "../../middleware/auth0/checkPermissions";
 
 const router: Router = Router();
 
 router.post(
 	"/",
+	authMiddleware,
+	checkRequiredPermissions(["create:category"]),
 	async (
 		req: TypedRequestBody<CategoriesWithoutID>,
 		res: Response,
