@@ -10,6 +10,7 @@ const defaultConfig: AxiosRequestConfig = {
 
 export interface AxiosWrapperConfig extends AxiosRequestConfig {
 	method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+	url: string;
 	headers?: {
 		[key: string]: string;
 	};
