@@ -1,4 +1,6 @@
 import { Response, Router } from "express";
+import { z } from "zod";
+
 import { upload } from "../../middleware/multer/upload";
 import { addFileMetadata } from "../../controller/addFileMetadata";
 import type { FileMetadataWithID } from "../../../interfaces/FileMetadata";
@@ -17,10 +19,13 @@ router.post(
 	async (req: TypedRequestBody<{ user_id: string }>, res: Response) => {
 		if (!req.file) return res.status(400).json({ message: "No file uploaded" });
 
+		const { user_id } = req.body;
+		const checkedUser_id = z.string().parse(user_id);
+
 		const addedId = await addFileMetadata({
 			path: req.file.path,
 			originalname: req.file.originalname,
-			user_id: req.body.user_id,
+			user_id: checkedUser_id,
 		});
 
 		if (!addedId) throw new Error("Failed to add file metadata");
