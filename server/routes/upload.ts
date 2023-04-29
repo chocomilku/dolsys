@@ -1,14 +1,14 @@
 import { Response, Router } from "express";
 import { z } from "zod";
 
-import { upload } from "../../middleware/multer/upload";
-import { addFileMetadata } from "../../controller/addFileMetadata";
-import type { FileMetadataWithID } from "../../../interfaces/FileMetadata";
-import { db } from "../../middleware/knex/credentials";
-import { TypedRequestBody } from "../../interfaces/typedExpress";
-import { authMiddleware } from "../../middleware/jwt-bearer/authOptions";
-import { checkRequiredPermissions } from "../../middleware/auth0/checkPermissions";
-import { InternalServerError } from "../../middleware/errors/errors";
+import { upload } from "../middleware/multer/upload";
+import { addFileMetadata } from "../controller/addFileMetadata";
+import type { FileMetadataWithID } from "../../interfaces/FileMetadata";
+import { db } from "../middleware/knex/credentials";
+import { TypedRequestBody } from "../interfaces/typedExpress";
+import { authMiddleware } from "../middleware/jwt-bearer/authOptions";
+import { checkRequiredPermissions } from "../middleware/auth0/checkPermissions";
+import { InternalServerError } from "../middleware/errors/errors";
 
 const router: Router = Router();
 

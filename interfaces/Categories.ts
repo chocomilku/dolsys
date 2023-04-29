@@ -4,3 +4,5 @@ export interface Categories {
 	code?: string;
 	scope_level?: string;
 }
+
+export type CategoriesWithoutID = Omit<Categories, "id">;

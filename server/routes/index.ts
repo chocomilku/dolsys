@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { indexRoute } from "./index.route";
 import { uploadRoutes } from "./upload";
-import { dlRoutes } from "./dl";
+import { dlRoutes } from "./download";
 
 const router: Router = Router();
 
