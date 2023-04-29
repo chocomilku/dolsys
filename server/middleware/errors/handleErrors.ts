@@ -14,7 +14,7 @@ export const handleErrors: ErrorRequestHandler = (
 
 	if (err instanceof ZodError) {
 		return res.status(400).json({
-			error: err.flatten().formErrors[0],
+			error: err.errors,
 		});
 	}
 
