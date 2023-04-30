@@ -1,4 +1,4 @@
-import { Response, Router } from "express";
+import { NextFunction, Response, Router } from "express";
 import { z } from "zod";
 
 import { upload } from "../middleware/multer/upload";
@@ -19,32 +19,39 @@ router.post(
 	checkRequiredPermissions(["upload:files"]),
 	async (
 		req: TypedRequestBody<{ user_id: string; category_id: number }>,
-		res: Response
+		res: Response,
+		next: NextFunction
 	) => {
-		if (!req.file) return res.status(400).json({ message: "No file uploaded" });
+		try {
+			if (!req.file)
+				return res.status(400).json({ message: "No file uploaded" });
 
-		const { user_id, category_id } = req.body;
-		const checkedBody = z
-			.object({
-				user_id: z.string(),
-				category_id: z.number(),
-			})
-			.parse({ user_id, category_id });
+			const { user_id, category_id } = req.body;
+			const checkedBody = z
+				.object({
+					user_id: z.string(),
+					category_id: z.coerce.number(),
+				})
+				.parse({ user_id, category_id });
 
-		const addedId = await addFileMetadata({
-			path: req.file.path,
-			originalname: req.file.originalname,
-			user_id: checkedBody.user_id,
-			category_id: checkedBody.category_id,
-		});
+			const addedId = await addFileMetadata({
+				path: req.file.path,
+				originalname: req.file.originalname,
+				user_id: checkedBody.user_id,
+				category_id: checkedBody.category_id,
+			});
 
-		if (!addedId) throw new InternalServerError("Failed to add file metadata");
+			if (!addedId)
+				throw new InternalServerError("Failed to add file metadata");
 
-		const addedFile = await db<FileMetadataWithID>("files").where({
-			id: addedId[0],
-		});
+			const addedFile = await db<FileMetadataWithID>("files").where({
+				id: addedId[0],
+			});
 
-		res.status(201).json(addedFile[0]);
+			res.status(201).json(addedFile[0]);
+		} catch (error) {
+			next(error);
+		}
 	}
 );
 
