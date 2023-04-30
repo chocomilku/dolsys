@@ -1,4 +1,4 @@
-import type { FileMetadataWithID } from "../../interfaces/FileMetadata";
+import type { FileMetadataWithID } from "../../../interfaces/FileMetadata";
 import { axiosWrapperWithAuthToken } from "./axios/axiosWrapperWithAuthToken";
 
 export const uploadFile = async (
