@@ -22,6 +22,7 @@
 		/* Add vite types globally */
 		"types": ["vite/client"]
 	},
-	"include": ["src", "components", "routes", "controllers"],
+	"include": ["./**/*.ts", "./**/*.tsx", "./**/*.json", "./**/*.d.ts"],
+	"exclude": ["node_modules", "dist"],
 	"references": [{ "path": "./tsconfig.node.json" }]
 }
