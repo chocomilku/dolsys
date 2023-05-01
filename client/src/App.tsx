@@ -3,8 +3,11 @@ import { IndexPage } from "./routes/index.route";
 import { AdminRoutes } from "./routes/admin";
 import { IndexUIDPage } from "./routes/index.[uid].route";
 import { NotFoundPage } from "./routes/notFound.route";
-import NavBar from "./components/NavBar";
 import { useAuth0 } from "@auth0/auth0-react";
+import { FileRoutes } from "./routes/files";
+import { CategoryRoutes } from "./routes/categories";
+
+import NavBar from "./components/NavBar";
 
 function App(): JSX.Element {
 	const { user, isAuthenticated } = useAuth0();
@@ -17,6 +20,8 @@ function App(): JSX.Element {
 				<Routes>
 					<Route path="/" element={<IndexPage />} />
 					<Route path="/admin/*" element={<AdminRoutes />} />
+					<Route path="/files/*" element={<FileRoutes />} />
+					<Route path="/categories/*" element={<CategoryRoutes />} />
 					<Route path="/:uid" element={<IndexUIDPage />} />
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
