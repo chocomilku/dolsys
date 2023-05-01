@@ -12,7 +12,6 @@ import {
 	VStack,
 	IconButton,
 	CloseButton,
-	Avatar,
 	useColorMode,
 	Slide,
 	Fade,
@@ -27,6 +26,8 @@ import {
 	NavigationButtonNavLinks,
 } from "./nav/NavigationButtonLinks";
 import { NavLink } from "react-router-dom";
+import { AvatarWithPopover } from "./nav/AvatarWithPopover";
+import Auth0LogButton from "./Auth0LogButton";
 
 interface NavBarProps {
 	isAuthenticated: boolean;
@@ -158,16 +159,9 @@ const NavBar = ({ isAuthenticated, user, navBarLinks }: NavBarProps) => {
 						</Button>
 
 						{!user || !isAuthenticated ? (
-							<Button
-								display="flex"
-								colorScheme="purple"
-								variant="outline"
-								size="md"
-								rightIcon={<CiLogin />}>
-								Log In
-							</Button>
+							<Auth0LogButton label="Log In" type="login" icon={<CiLogin />} />
 						) : (
-							<Avatar size="md" name={user.name} src={user.picture} />
+							<AvatarWithPopover user={user} />
 						)}
 					</HStack>
 				</Flex>
