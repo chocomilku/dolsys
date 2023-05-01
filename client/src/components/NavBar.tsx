@@ -16,11 +16,9 @@ import {
 	useColorMode,
 } from "@chakra-ui/react";
 import { Logo } from "./Logo";
-import { AiOutlineMenu, AiFillHome } from "react-icons/ai";
+import { AiOutlineMenu } from "react-icons/ai";
 import { CiLogin } from "react-icons/ci";
 import { MdLightMode, MdDarkMode } from "react-icons/md";
-import { VscFiles } from "react-icons/vsc";
-import { BiCategoryAlt } from "react-icons/bi";
 import { User } from "@auth0/auth0-react";
 import {
 	NavLinkButtonProps,
@@ -80,24 +78,15 @@ const NavBar = ({ isAuthenticated, user, navBarLinks }: NavBarProps) => {
 									onClick={mobileNav.onClose}
 								/>
 								{/* mobile nav navigation links */}
-								<NavigationButtonNavLinks
-									to="/"
-									leftIcon={<AiFillHome />}
-									pathName="Home"
-									fullWidth
-								/>
-								<NavigationButtonNavLinks
-									to="/files"
-									leftIcon={<VscFiles />}
-									pathName="Files"
-									fullWidth
-								/>
-								<NavigationButtonNavLinks
-									to="/categories"
-									leftIcon={<BiCategoryAlt />}
-									pathName="Categories"
-									fullWidth
-								/>
+								{navBarLinks.map((navBarLink, i) => (
+									<NavigationButtonNavLinks
+										key={`mobileNav${i}-` + navBarLink.pathName}
+										to={navBarLink.to}
+										leftIcon={navBarLink.leftIcon}
+										pathName={navBarLink.pathName}
+										fullWidth
+									/>
+								))}
 							</VStack>
 						</Box>
 
@@ -113,21 +102,14 @@ const NavBar = ({ isAuthenticated, user, navBarLinks }: NavBarProps) => {
 
 						{/* desktop nav */}
 						<HStack spacing={3} display={{ base: "none", md: "inline-flex" }}>
-							<NavigationButtonNavLinks
-								to="/"
-								leftIcon={<AiFillHome />}
-								pathName="Home"
-							/>
-							<NavigationButtonNavLinks
-								to="/files"
-								leftIcon={<VscFiles />}
-								pathName="Files"
-							/>
-							<NavigationButtonNavLinks
-								to="/categories"
-								leftIcon={<BiCategoryAlt />}
-								pathName="Categories"
-							/>
+							{navBarLinks.map((navBarLink, i) => (
+								<NavigationButtonNavLinks
+									key={`desktopNav${i}-` + navBarLink.pathName}
+									to={navBarLink.to}
+									leftIcon={navBarLink.leftIcon}
+									pathName={navBarLink.pathName}
+								/>
+							))}
 						</HStack>
 					</HStack>
 

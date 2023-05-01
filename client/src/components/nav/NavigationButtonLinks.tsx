@@ -35,7 +35,8 @@ export const NavigationButtonNavLinks = (props: NavLinkButtonProps) => {
 						variant={isActive ? "solid" : "ghost"}
 						colorScheme="purple"
 						leftIcon={props.leftIcon}
-						size={props.fullWidth ? undefined : "sm"}>
+						size={props.fullWidth ? undefined : "sm"}
+						shadow="xs">
 						{props.pathName}
 					</Button>
 				);
