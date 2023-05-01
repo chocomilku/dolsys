@@ -12,6 +12,7 @@ import { NavLinkButtonProps } from "./components/nav/NavigationButtonLinks";
 import { AiFillHome } from "react-icons/ai";
 import { BiCategoryAlt } from "react-icons/bi";
 import { VscFiles } from "react-icons/vsc";
+import Footer from "./components/footer/Footer";
 
 const navBarRoutes: NavLinkButtonProps[] = [
 	{
@@ -56,6 +57,7 @@ function App(): JSX.Element {
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
 			</main>
+			<Footer />
 		</>
 	);
 }

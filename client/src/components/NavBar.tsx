@@ -167,7 +167,7 @@ const NavBar = ({ isAuthenticated, user, navBarLinks }: NavBarProps) => {
 								Log In
 							</Button>
 						) : (
-							<Avatar size="sm" name={user.name} src={user.picture} />
+							<Avatar size="md" name={user.name} src={user.picture} />
 						)}
 					</HStack>
 				</Flex>
