@@ -8,7 +8,6 @@ import { FileRoutes } from "./routes/files";
 import { CategoryRoutes } from "./routes/categories";
 
 import NavBar from "./components/NavBar";
-import { useColorMode } from "@chakra-ui/react";
 import { NavLinkButtonProps } from "./components/nav/NavigationButtonLinks";
 import { AiFillHome } from "react-icons/ai";
 import { BiCategoryAlt } from "react-icons/bi";
@@ -35,7 +34,6 @@ const navBarRoutes: NavLinkButtonProps[] = [
 
 function App(): JSX.Element {
 	const { user, isAuthenticated } = useAuth0();
-	const { colorMode } = useColorMode();
 
 	return (
 		<>
@@ -46,7 +44,6 @@ function App(): JSX.Element {
 			/>
 			<main
 				style={{
-					backgroundColor: colorMode == "light" ? "#FFF" : "#232323",
 					width: "100%",
 					height: "100vh",
 				}}>
