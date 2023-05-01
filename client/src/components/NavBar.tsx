@@ -14,6 +14,8 @@ import {
 	CloseButton,
 	Avatar,
 	useColorMode,
+	Slide,
+	Fade,
 } from "@chakra-ui/react";
 import { Logo } from "./Logo";
 import { AiOutlineMenu } from "react-icons/ai";
@@ -48,6 +50,7 @@ const NavBar = ({ isAuthenticated, user, navBarLinks }: NavBarProps) => {
 				<Flex alignItems="center" justifyContent="space-between" mx="auto">
 					<HStack display="flex" spacing={3} alignItems="center">
 						{/* mobile nav */}
+
 						<Box display={{ base: "inline-flex", md: "none" }}>
 							<IconButton
 								display={{ base: "flex", md: "none" }}
@@ -57,39 +60,69 @@ const NavBar = ({ isAuthenticated, user, navBarLinks }: NavBarProps) => {
 								_dark={{ color: "inherit" }}
 								variant="ghost"
 								icon={<AiOutlineMenu />}
-								onClick={mobileNav.onOpen}
+								onClick={mobileNav.onToggle}
 							/>
-							<VStack
-								pos="absolute"
-								top={0}
-								left={0}
-								right={0}
-								display={mobileNav.isOpen ? "flex" : "none"}
-								flexDirection="column"
-								p={2}
-								pb={4}
-								m={2}
-								bg={bg}
-								spacing={3}
-								rounded="sm"
-								shadow="sm">
-								<CloseButton
-									aria-label="Close menu"
-									justifySelf="self-start"
-									onClick={mobileNav.onClose}
+
+							{/* faded black bg on the back that blocks touch behind while mobile nav is open */}
+							<Fade
+								in={mobileNav.isOpen}
+								style={{
+									display: mobileNav.isOpen ? "block" : "none",
+								}}
+								unmountOnExit={true}>
+								<span
+									style={{
+										width: "100%",
+										height: "100%",
+										background: "#232323",
+										opacity: "35%",
+										position: "absolute",
+										top: 0,
+										left: 0,
+									}}
 								/>
-								{/* mobile nav navigation links */}
-								{navBarLinks.map((navBarLink, i) => (
-									<NavigationButtonNavLinks
-										key={`mobileNav${i}-` + navBarLink.pathName}
-										to={navBarLink.to}
-										leftIcon={navBarLink.leftIcon}
-										pathName={navBarLink.pathName}
-										fullWidth
+							</Fade>
+							<Slide
+								in={mobileNav.isOpen}
+								direction="left"
+								unmountOnExit={true}
+								style={{
+									zIndex: 10,
+								}}>
+								<VStack
+									pos="absolute"
+									top={0}
+									left={0}
+									right={0}
+									display={mobileNav.isOpen ? "flex" : "none"}
+									flexDirection="column"
+									p={2}
+									pb={4}
+									my={"20"}
+									mx={2}
+									bg={bg}
+									spacing={3}
+									rounded="sm"
+									shadow="sm"
+									zIndex={10}>
+									<CloseButton
+										aria-label="Close menu"
+										justifySelf="self-start"
 										onClick={mobileNav.onClose}
 									/>
-								))}
-							</VStack>
+									{/* mobile nav navigation links */}
+									{navBarLinks.map((navBarLink, i) => (
+										<NavigationButtonNavLinks
+											key={`mobileNav${i}-` + navBarLink.pathName}
+											to={navBarLink.to}
+											leftIcon={navBarLink.leftIcon}
+											pathName={navBarLink.pathName}
+											fullWidth
+											onClick={mobileNav.onClose}
+										/>
+									))}
+								</VStack>
+							</Slide>
 						</Box>
 
 						{/* logo */}
@@ -111,10 +144,7 @@ const NavBar = ({ isAuthenticated, user, navBarLinks }: NavBarProps) => {
 					</HStack>
 
 					{/* Color switcher + login / avatar */}
-					<HStack
-						spacing={3}
-						display={mobileNav.isOpen ? "none" : "flex"}
-						alignItems="center">
+					<HStack spacing={3} display="flex" alignItems="center">
 						<Button
 							onClick={toggleColorMode}
 							p={3}
@@ -129,7 +159,7 @@ const NavBar = ({ isAuthenticated, user, navBarLinks }: NavBarProps) => {
 
 						{!user || !isAuthenticated ? (
 							<Button
-								display={mobileNav.isOpen ? "none" : "flex"}
+								display="flex"
 								colorScheme="purple"
 								variant="outline"
 								size="md"
