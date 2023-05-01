@@ -31,11 +31,20 @@ export interface NavLinkButtonProps {
 	 * `true` => link will only be active if the current path is `/admin`
 	 */
 	end?: boolean;
+
+	/**
+	 * An optional onClick handler
+	 */
+	onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 }
 
 export const NavigationButtonNavLinks = (props: NavLinkButtonProps) => {
 	return (
-		<NavLink to={props.to} style={{ width: "100%" }} end={props.end}>
+		<NavLink
+			to={props.to}
+			style={{ width: "100%" }}
+			end={props.end}
+			onClick={props.onClick}>
 			{({ isActive }) => {
 				return (
 					<Button

@@ -86,6 +86,7 @@ const NavBar = ({ isAuthenticated, user, navBarLinks }: NavBarProps) => {
 										leftIcon={navBarLink.leftIcon}
 										pathName={navBarLink.pathName}
 										fullWidth
+										onClick={mobileNav.onClose}
 									/>
 								))}
 							</VStack>
