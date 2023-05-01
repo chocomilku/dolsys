@@ -24,6 +24,7 @@ import {
 	NavLinkButtonProps,
 	NavigationButtonNavLinks,
 } from "./nav/NavigationButtonLinks";
+import { NavLink } from "react-router-dom";
 
 interface NavBarProps {
 	isAuthenticated: boolean;
@@ -91,14 +92,9 @@ const NavBar = ({ isAuthenticated, user, navBarLinks }: NavBarProps) => {
 						</Box>
 
 						{/* logo */}
-						<chakra.a
-							href="/"
-							title="DOLSYS"
-							display="flex"
-							alignItems="center">
+						<NavLink to="/" style={{ display: "flex", alignItems: "center" }}>
 							<Logo />
-							<VisuallyHidden>DOLSYS</VisuallyHidden>
-						</chakra.a>
+						</NavLink>
 
 						{/* desktop nav */}
 						<HStack spacing={3} display={{ base: "none", md: "inline-flex" }}>

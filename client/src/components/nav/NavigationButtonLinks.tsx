@@ -23,11 +23,19 @@ export interface NavLinkButtonProps {
 	 * Whether the button should take up the full width of the parent container
 	 */
 	fullWidth?: boolean;
+
+	/**
+	 * Whether the button should not be active if the path contains a substring of the current path (to)
+	 * @example
+	 * `false` => link will be active if the current path is `/admin` or `/admin/users`
+	 * `true` => link will only be active if the current path is `/admin`
+	 */
+	end?: boolean;
 }
 
 export const NavigationButtonNavLinks = (props: NavLinkButtonProps) => {
 	return (
-		<NavLink to={props.to} style={{ width: "100%" }}>
+		<NavLink to={props.to} style={{ width: "100%" }} end={props.end}>
 			{({ isActive }) => {
 				return (
 					<Button

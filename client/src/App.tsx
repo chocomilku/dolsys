@@ -18,19 +18,17 @@ const navBarRoutes: NavLinkButtonProps[] = [
 		to: "/",
 		leftIcon: <AiFillHome />,
 		pathName: "Home",
-		fullWidth: true,
+		end: true,
 	},
 	{
 		to: "/files",
 		leftIcon: <VscFiles />,
 		pathName: "Files",
-		fullWidth: true,
 	},
 	{
 		to: "/categories",
 		leftIcon: <BiCategoryAlt />,
 		pathName: "Categories",
-		fullWidth: true,
 	},
 ];
 
