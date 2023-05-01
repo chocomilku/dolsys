@@ -22,13 +22,18 @@ import { MdLightMode, MdDarkMode } from "react-icons/md";
 import { VscFiles } from "react-icons/vsc";
 import { BiCategoryAlt } from "react-icons/bi";
 import { User } from "@auth0/auth0-react";
+import {
+	NavLinkButtonProps,
+	NavigationButtonNavLinks,
+} from "./nav/NavigationButtonLinks";
 
-interface NavBarAuthProps {
+interface NavBarProps {
 	isAuthenticated: boolean;
 	user?: User;
+	navBarLinks: NavLinkButtonProps[];
 }
 
-const NavBar = ({ isAuthenticated, user }: NavBarAuthProps) => {
+const NavBar = ({ isAuthenticated, user, navBarLinks }: NavBarProps) => {
 	const bg = useColorModeValue("white", "gray.800");
 	const mobileNav = useDisclosure();
 	const { toggleColorMode, colorMode } = useColorMode();
@@ -74,21 +79,25 @@ const NavBar = ({ isAuthenticated, user }: NavBarAuthProps) => {
 									justifySelf="self-start"
 									onClick={mobileNav.onClose}
 								/>
-
 								{/* mobile nav navigation links */}
-								<Button w="full" variant="ghost" leftIcon={<AiFillHome />}>
-									Home
-								</Button>
-								<Button
-									w="full"
-									variant="solid"
-									colorScheme="purple"
-									leftIcon={<VscFiles />}>
-									Files
-								</Button>
-								<Button w="full" variant="ghost" leftIcon={<BiCategoryAlt />}>
-									Categories
-								</Button>
+								<NavigationButtonNavLinks
+									to="/"
+									leftIcon={<AiFillHome />}
+									pathName="Home"
+									fullWidth
+								/>
+								<NavigationButtonNavLinks
+									to="/files"
+									leftIcon={<VscFiles />}
+									pathName="Files"
+									fullWidth
+								/>
+								<NavigationButtonNavLinks
+									to="/categories"
+									leftIcon={<BiCategoryAlt />}
+									pathName="Categories"
+									fullWidth
+								/>
 							</VStack>
 						</Box>
 
@@ -104,19 +113,21 @@ const NavBar = ({ isAuthenticated, user }: NavBarAuthProps) => {
 
 						{/* desktop nav */}
 						<HStack spacing={3} display={{ base: "none", md: "inline-flex" }}>
-							<Button variant="ghost" leftIcon={<AiFillHome />} size="sm">
-								Home
-							</Button>
-							<Button
-								variant="solid"
-								colorScheme="purple"
+							<NavigationButtonNavLinks
+								to="/"
+								leftIcon={<AiFillHome />}
+								pathName="Home"
+							/>
+							<NavigationButtonNavLinks
+								to="/files"
 								leftIcon={<VscFiles />}
-								size="sm">
-								Files
-							</Button>
-							<Button variant="ghost" leftIcon={<BiCategoryAlt />} size="sm">
-								Categories
-							</Button>
+								pathName="Files"
+							/>
+							<NavigationButtonNavLinks
+								to="/categories"
+								leftIcon={<BiCategoryAlt />}
+								pathName="Categories"
+							/>
 						</HStack>
 					</HStack>
 

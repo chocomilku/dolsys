@@ -8,13 +8,42 @@ import { FileRoutes } from "./routes/files";
 import { CategoryRoutes } from "./routes/categories";
 
 import NavBar from "./components/NavBar";
+import { NavLinkButtonProps } from "./components/nav/NavigationButtonLinks";
+import { AiFillHome } from "react-icons/ai";
+import { BiCategoryAlt } from "react-icons/bi";
+import { VscFiles } from "react-icons/vsc";
+
+const navBarRoutes: NavLinkButtonProps[] = [
+	{
+		to: "/",
+		leftIcon: <AiFillHome />,
+		pathName: "Home",
+		fullWidth: true,
+	},
+	{
+		to: "/files",
+		leftIcon: <VscFiles />,
+		pathName: "Files",
+		fullWidth: true,
+	},
+	{
+		to: "/categories",
+		leftIcon: <BiCategoryAlt />,
+		pathName: "Categories",
+		fullWidth: true,
+	},
+];
 
 function App(): JSX.Element {
 	const { user, isAuthenticated } = useAuth0();
 
 	return (
 		<>
-			<NavBar isAuthenticated={isAuthenticated} user={user} />
+			<NavBar
+				isAuthenticated={isAuthenticated}
+				user={user}
+				navBarLinks={navBarRoutes}
+			/>
 			<main
 				style={{ backgroundColor: "#232323", width: "100%", height: "100vh" }}>
 				<Routes>
