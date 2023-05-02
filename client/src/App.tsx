@@ -1,11 +1,11 @@
 import { Routes, Route } from "react-router-dom";
-import { IndexPage } from "./routes/index.route";
-import { AdminRoutes } from "./routes/admin";
-import { IndexUIDPage } from "./routes/index.[uid].route";
-import { NotFoundPage } from "./routes/notFound.route";
+import { IndexPage } from "./pages/index.route";
+import { AdminRoutes } from "./pages/admin";
+import { IndexUIDPage } from "./pages/index.[uid].route";
+import { NotFoundPage } from "./pages/notFound.route";
 import { useAuth0 } from "@auth0/auth0-react";
-import { FileRoutes } from "./routes/files";
-import { CategoryRoutes } from "./routes/categories";
+import { FileRoutes } from "./pages/files";
+import { CategoryRoutes } from "./pages/categories";
 
 import NavBar from "./components/NavBar";
 import { NavLinkButtonProps } from "./components/nav/NavigationButtonLinks";
