@@ -7,6 +7,9 @@ export default defineConfig({
 	plugins: [react()],
 	server: {
 		port: 3001,
+		watch: {
+			usePolling: true,
+		},
 	},
 	envDir: path.join(__dirname, "../"),
 });
