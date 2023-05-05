@@ -1,21 +1,22 @@
 import { Request, Response, Router } from "express";
 import { db } from "../middleware/knex/credentials";
 import { FileMetadataWithID } from "../../interfaces/FileMetadata";
+import { getFileMetadata } from "../controller/getFileMetadata";
 
 const router = Router();
 
 router.get("/:uid", async (req: Request, res: Response) => {
 	const { uid } = req.params;
 
-	const file = await db<FileMetadataWithID>("files").where({ uid });
+	const file = await getFileMetadata(uid);
 
-	if (!file[0]) return res.status(404).json({ message: "File not found" });
+	if (!file) return res.status(404).json({ message: "File not found" });
 
 	await db<FileMetadataWithID>("files")
 		.where({ uid })
 		.increment("downloadCount", 1);
 
-	res.download(file[0].path, file[0].originalname);
+	return res.download(file.path, file.originalname);
 });
 
 export const dlRoutes: Router = router;
