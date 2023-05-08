@@ -3,12 +3,14 @@ import { z } from "zod";
 
 import { upload } from "../middleware/multer/upload";
 import { addFileMetadata } from "../controller/addFileMetadata";
-import type { FileMetadataWithID } from "../../interfaces/FileMetadata";
-import { db } from "../middleware/knex/credentials";
 import { TypedRequestBody } from "../interfaces/typedExpress";
 import { authMiddleware } from "../middleware/jwt-bearer/authOptions";
 import { checkRequiredPermissions } from "../middleware/auth0/checkPermissions";
-import { InternalServerError } from "../middleware/errors/errors";
+import {
+	BadRequestError,
+	InternalServerError,
+} from "../middleware/errors/errors";
+import { getFileMetadata } from "../controller/getFileMetadata";
 
 const router: Router = Router();
 
@@ -23,8 +25,7 @@ router.post(
 		next: NextFunction
 	) => {
 		try {
-			if (!req.file)
-				return res.status(400).json({ message: "No file uploaded" });
+			if (!req.file) throw new BadRequestError("No file was uploaded");
 
 			const { user_id, category_id } = req.body;
 			const checkedBody = z
@@ -44,11 +45,12 @@ router.post(
 			if (!addedId)
 				throw new InternalServerError("Failed to add file metadata");
 
-			const addedFile = await db<FileMetadataWithID>("files").where({
-				id: addedId[0],
-			});
+			const addedFile = await getFileMetadata({ id: addedId[0] });
 
-			res.status(201).json(addedFile[0]);
+			if (!addedFile)
+				throw new InternalServerError("Failed to get file metadata");
+
+			res.status(201).json(addedFile);
 		} catch (error) {
 			next(error);
 		}
