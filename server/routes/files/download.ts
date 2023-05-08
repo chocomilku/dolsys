@@ -9,7 +9,7 @@ const router = Router();
 router.get("/:uid/download", async (req: Request, res: Response) => {
 	const { uid } = req.params;
 
-	const file = await getFileMetadata(uid);
+	const file = await getFileMetadata({ uid });
 
 	if (!file) throw new NotFoundError("File not found");
 

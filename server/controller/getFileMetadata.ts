@@ -13,9 +13,11 @@ const omittedSpecificColumns = (
 	);
 };
 
-export const getFileMetadata = async (uid: string) => {
+export const getFileMetadata = async (
+	specificParams: Partial<FilesWithCategories>
+) => {
 	return await db<FilesWithCategories>("files_with_categories")
-		.where({ uid })
+		.where(specificParams)
 		.first();
 };
 
