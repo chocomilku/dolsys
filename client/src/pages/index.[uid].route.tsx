@@ -31,6 +31,38 @@ export const IndexUIDPage = (): JSX.Element => {
 		fetchFileMetadata();
 	}, [getAccessTokenSilently, uid]);
 
+	useEffect(() => {
+		const downloadFile = async () => {
+			try {
+				const access_token = await getAccessTokenSilently();
+				const downloadFile = await axiosWrapperWithAuthToken(access_token, {
+					url: `/files/${uid}/download`,
+					method: "GET",
+				});
+				console.log(downloadFile);
+
+				const response = await fetch(
+					`${import.meta.env.VITE_API_URL}/files/${uid}/download`,
+					{
+						method: "GET",
+					}
+				);
+
+				const blob = await response.blob();
+				const url = window.URL.createObjectURL(new Blob([blob]));
+				const link = document.createElement("a");
+				link.href = url;
+				link.setAttribute("download", fileMetadata?.originalname ?? "file");
+				document.body.appendChild(link);
+				link.click();
+				link.parentNode?.removeChild(link);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		downloadFile();
+	}, [fileMetadata, getAccessTokenSilently, uid]);
+
 	return (
 		<h1>
 			UID: <code>{uid}</code>
