@@ -1,38 +1,38 @@
 {
-  "name": "server",
-  "main": "server.ts",
-  "scripts": {
-    "server:start": "ts-node .",
-    "server:dev": "ts-node-dev --respawn ."
-  },
-  "dependencies": {
-    "@types/morgan": "^1.9.4",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "express-oauth2-jwt-bearer": "^1.4.1",
-    "helmet": "^6.1.5",
-    "jsonwebtoken": "^9.0.0",
-    "knex": "^2.4.2",
-    "morgan": "^1.10.0",
-    "multer": "^1.4.5-lts.1",
-    "mysql2": "^3.2.3",
-    "nanoid": "^3.3.6",
-    "tslint-config-prettier": "^1.18.0",
-    "winston": "^3.8.2",
-    "zod": "^3.21.4"
-  },
-  "devDependencies": {
-    "@types/cors": "^2.8.13",
-    "@types/express": "^4.17.17",
-    "@types/multer": "^1.4.7",
-    "@types/nanoid": "^3.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.59.0",
-    "@typescript-eslint/parser": "^5.59.0",
-    "eslint": "^8.39.0",
-    "eslint-config-prettier": "^8.8.0",
-    "prettier": "2.8.7",
-    "prettier-eslint-cli": "^7.1.0",
-    "typescript": "^5.0.4"
-  }
+	"name": "server",
+	"main": "server.ts",
+	"scripts": {
+		"start": "ts-node .",
+		"dev": "ts-node-dev --respawn ."
+	},
+	"dependencies": {
+		"@types/morgan": "^1.9.4",
+		"cors": "^2.8.5",
+		"dotenv": "^16.0.3",
+		"express": "^4.18.2",
+		"express-oauth2-jwt-bearer": "^1.4.1",
+		"helmet": "^6.1.5",
+		"jsonwebtoken": "^9.0.0",
+		"knex": "^2.4.2",
+		"morgan": "^1.10.0",
+		"multer": "^1.4.5-lts.1",
+		"mysql2": "^3.2.3",
+		"nanoid": "^3.3.6",
+		"tslint-config-prettier": "^1.18.0",
+		"winston": "^3.8.2",
+		"zod": "^3.21.4"
+	},
+	"devDependencies": {
+		"@types/cors": "^2.8.13",
+		"@types/express": "^4.17.17",
+		"@types/multer": "^1.4.7",
+		"@types/nanoid": "^3.0.0",
+		"@typescript-eslint/eslint-plugin": "^5.59.0",
+		"@typescript-eslint/parser": "^5.59.0",
+		"eslint": "^8.39.0",
+		"eslint-config-prettier": "^8.8.0",
+		"prettier": "2.8.7",
+		"prettier-eslint-cli": "^7.1.0",
+		"typescript": "^5.0.4"
+	}
 }

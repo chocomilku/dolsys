@@ -1,16 +1,24 @@
 {
-  "name": "dolsys",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.ts",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "chocomilku",
-  "license": "MIT",
-  "devDependencies": {
-    "eslint": "^8.38.0",
-    "ts-node": "^10.9.1",
-    "ts-node-dev": "^2.0.0"
-  }
+	"name": "dolsys",
+	"version": "0.5",
+	"scripts": {
+		"client:dev": "cd client && npm run dev",
+		"client:build": "cd client && npm run build",
+		"client:start": "cd client && npm run preview",
+		"server:dev": "cd server && npm run dev",
+		"server:start": "cd server && npm run start",
+		"dolsys:dev": "concurrently --names 'client,server' --prefix-colors 'bgCyan.bold,bgMagenta.bold' \"npm run client:dev\" \"npm run server:dev\"",
+		"dolsys:start": "concurrently --names 'client,server' --prefix-colors 'bgCyan.bold,bgMagenta.bold' \"npm run client:start\" \"npm run server:start\""
+	},
+	"author": "chocomilku",
+	"license": "MIT",
+	"devDependencies": {
+		"eslint": "^8.38.0",
+		"ts-node": "^10.9.1",
+		"ts-node-dev": "^2.0.0"
+	},
+	"dependencies": {
+		"chalk": "^5.2.0",
+		"concurrently": "^8.0.1"
+	}
 }
