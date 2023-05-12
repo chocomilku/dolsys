@@ -50,10 +50,12 @@ export const IndexUIDPage = (): JSX.Element => {
 	}, [getAccessTokenSilently, uid]);
 
 	return (
-		<h1>
-			UID: <code>{uid}</code>
-			<br />
-			<code>{JSON.stringify(fileMetadata)}</code>
-		</h1>
+		<>
+			<h1>Thank you for downloading!</h1>
+			<hr />
+			<h3>{fileMetadata?.name}</h3>
+			<kbd>{fileMetadata?.code}</kbd>
+			<p>Downloads: {fileMetadata?.downloadCount}</p>
+		</>
 	);
 };
