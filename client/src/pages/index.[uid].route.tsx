@@ -28,7 +28,6 @@ export const IndexUIDPage = (): JSX.Element => {
 					url: `/files/${uid}/download`,
 					method: "GET",
 				});
-				console.log(downloadFile);
 
 				if (!fetchFileMetadata.data) return;
 				if (!downloadFile.data) return;
