@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { axiosWrapperWithAuthToken } from "../controllers/axios/axiosWrapperWithAuthToken";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FilesWithCategoriesWithoutPathAndUserID } from "../../../interfaces/FileMetadata";
+import { axiosWrapper } from "../controllers/axios/axiosWrapper";
 
 export const IndexUIDPage = (): JSX.Element => {
 	const { uid } = useParams();
@@ -11,7 +12,7 @@ export const IndexUIDPage = (): JSX.Element => {
 		useState<FilesWithCategoriesWithoutPathAndUserID>();
 
 	useEffect(() => {
-		const fetchFileMetadata = async () => {
+		const downloadFileAndFetchMetadata = async () => {
 			try {
 				const access_token = await getAccessTokenSilently();
 				const fetchFileMetadata =
@@ -22,37 +23,22 @@ export const IndexUIDPage = (): JSX.Element => {
 							method: "GET",
 						}
 					);
-				if (!fetchFileMetadata.data) return;
-				setFileMetadata(fetchFileMetadata.data);
-			} catch (error) {
-				console.log(error);
-			}
-		};
-		fetchFileMetadata();
-	}, [getAccessTokenSilently, uid]);
 
-	useEffect(() => {
-		const downloadFile = async () => {
-			try {
-				const access_token = await getAccessTokenSilently();
-				const downloadFile = await axiosWrapperWithAuthToken(access_token, {
+				const downloadFile = await axiosWrapper<File>({
 					url: `/files/${uid}/download`,
 					method: "GET",
 				});
 				console.log(downloadFile);
 
-				const response = await fetch(
-					`${import.meta.env.VITE_API_URL}/files/${uid}/download`,
-					{
-						method: "GET",
-					}
-				);
+				if (!fetchFileMetadata.data) return;
+				if (!downloadFile.data) return;
 
-				const blob = await response.blob();
-				const url = window.URL.createObjectURL(new Blob([blob]));
+				setFileMetadata(fetchFileMetadata.data);
+
+				const url = window.URL.createObjectURL(new Blob([downloadFile.data]));
 				const link = document.createElement("a");
 				link.href = url;
-				link.setAttribute("download", fileMetadata?.originalname ?? "file");
+				link.setAttribute("download", fetchFileMetadata.data.originalname);
 				document.body.appendChild(link);
 				link.click();
 				link.parentNode?.removeChild(link);
@@ -60,8 +46,8 @@ export const IndexUIDPage = (): JSX.Element => {
 				console.log(error);
 			}
 		};
-		downloadFile();
-	}, [fileMetadata, getAccessTokenSilently, uid]);
+		downloadFileAndFetchMetadata();
+	}, [getAccessTokenSilently, uid]);
 
 	return (
 		<h1>
