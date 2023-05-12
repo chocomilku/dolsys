@@ -12,9 +12,9 @@ router.get("/:uid", async (req, res) => {
 	if (!file) throw new NotFoundError("File not found");
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const { path, ...fileWithoutPath } = file;
+	const { path, user_id, ...fileWithoutPathAndUser } = file;
 
-	return res.status(200).json(fileWithoutPath);
+	return res.status(200).json(fileWithoutPathAndUser);
 });
 
 export const fileMetadata: Router = router;

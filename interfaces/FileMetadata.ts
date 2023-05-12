@@ -19,3 +19,6 @@ export interface FileMetadataWithID extends Omit<FileMetadata, "uid"> {
 export interface FilesWithCategories
 	extends FileMetadataWithID,
 		CategoriesWithoutID {}
+
+export interface FilesWithCategoriesWithoutPathAndUserID
+	extends Omit<FilesWithCategories, "path" | "user_id"> {}
