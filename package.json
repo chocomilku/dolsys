@@ -8,7 +8,9 @@
 		"server:dev": "cd server && npm run dev",
 		"server:start": "cd server && npm run start",
 		"dolsys:dev": "concurrently --names 'client,server' --prefix-colors 'bgCyan.bold,bgMagenta.bold' \"npm run client:dev\" \"npm run server:dev\"",
-		"dolsys:start": "concurrently --names 'client,server' --prefix-colors 'bgCyan.bold,bgMagenta.bold' \"npm run client:start\" \"npm run server:start\""
+		"dolsys:start": "concurrently --names 'client,server' --prefix-colors 'bgCyan.bold,bgMagenta.bold' \"npm run client:start\" \"npm run server:start\"",
+		"db:migrate": "cd server && npm run knex:migrate",
+		"db:rollback": "cd server && npm run knex:rollback"
 	},
 	"author": "chocomilku",
 	"license": "MIT",

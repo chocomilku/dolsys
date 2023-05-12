@@ -3,7 +3,9 @@
 	"main": "server.ts",
 	"scripts": {
 		"start": "ts-node .",
-		"dev": "ts-node-dev --respawn ."
+		"dev": "ts-node-dev --respawn .",
+		"knex:migrate": "knex migrate:latest --env dev",
+		"knex:rollback": "knex migrate:rollback --env dev"
 	},
 	"dependencies": {
 		"@types/morgan": "^1.9.4",
