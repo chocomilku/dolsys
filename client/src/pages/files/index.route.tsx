@@ -30,19 +30,21 @@ export const FileIndexPage = (): JSX.Element => {
 	};
 	return (
 		<>
-			<VStack as={Container} maxW="container.xl" p={8}>
+			<VStack as={Container} maxW="container.md" p={{ base: 4, md: 8 }}>
 				<Heading textAlign="center" pb={8}>
 					Upload Files
 				</Heading>
 
-				<Flex as={"form"} direction={"column"} w={"xl"} gap="1rem">
+				<Flex
+					as={"form"}
+					direction={"column"}
+					w={{ base: "100%", md: "xl" }}
+					gap="1rem">
 					<FileUploader
 						handleChange={handleChange}
 						name="file"
 						multiple={false}
-						required={true}
-						// apperently, message after upload cannot be changed yet so lets wait for https://github.com/KarimMokhtar/react-drag-drop-files/pull/118 to be merged to be able to do update the text
-					>
+						required={true}>
 						<Flex
 							w="full"
 							borderColor={"purple.500"}
@@ -66,7 +68,7 @@ export const FileIndexPage = (): JSX.Element => {
 						</Flex>
 					</FileUploader>
 
-					<Grid templateColumns={"2fr 1fr"} gap="0.5rem">
+					<Grid templateColumns={{ base: "1fr", md: "2fr 1fr" }} gap="0.5rem">
 						<GridItem as={FormControl}>
 							<Input
 								type="text"
@@ -95,7 +97,7 @@ export const FileIndexPage = (): JSX.Element => {
 						/>
 					</FormControl>
 
-					<Flex gap="0.25rem">
+					<Flex gap="0.25rem" direction={{ base: "column", md: "row" }}>
 						<Box w={"full"}>
 							<ReactSelect
 								required
@@ -108,11 +110,11 @@ export const FileIndexPage = (): JSX.Element => {
 							/>
 						</Box>
 
-						<FormControl maxW={"100px"}>
+						<FormControl maxW={{ base: "100%", md: "100px" }}>
 							<Input type="text" placeholder="Phase" colorScheme="purple" />
 						</FormControl>
 
-						<FormControl maxW={"100px"}>
+						<FormControl maxW={{ base: "100%", md: "100px" }}>
 							<Input type="text" placeholder="Unit" colorScheme="purple" />
 						</FormControl>
 					</Flex>
@@ -121,7 +123,7 @@ export const FileIndexPage = (): JSX.Element => {
 					variant={"solid"}
 					colorScheme="purple"
 					size={"lg"}
-					w={{ base: "sm", md: "lg" }}>
+					w={{ base: "100%", md: "md" }}>
 					Upload
 				</Button>
 			</VStack>
