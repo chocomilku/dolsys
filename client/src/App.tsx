@@ -4,7 +4,7 @@ import { AdminRoutes } from "./pages/admin";
 import { IndexUIDPage } from "./pages/index.[uid].route";
 import { NotFoundPage } from "./pages/notFound.route";
 import { useAuth0 } from "@auth0/auth0-react";
-import { FileRoutes } from "./pages/upload";
+import { UploadPage } from "./pages/upload";
 import { CategoryRoutes } from "./pages/categories";
 
 import NavBar from "./components/NavBar";
@@ -22,7 +22,7 @@ const navBarRoutes: NavLinkButtonProps[] = [
 		end: true,
 	},
 	{
-		to: "/files",
+		to: "/upload",
 		leftIcon: <VscFiles />,
 		pathName: "Files",
 	},
@@ -46,8 +46,8 @@ function App(): JSX.Element {
 			<main>
 				<Routes>
 					<Route path="/" element={<IndexPage />} />
+					<Route path="/upload" element={<UploadPage />} />
 					<Route path="/admin/*" element={<AdminRoutes />} />
-					<Route path="/files/*" element={<FileRoutes />} />
 					<Route path="/categories/*" element={<CategoryRoutes />} />
 					<Route path="/:uid" element={<IndexUIDPage />} />
 					<Route path="*" element={<NotFoundPage />} />

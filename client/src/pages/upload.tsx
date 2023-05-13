@@ -30,16 +30,16 @@ import { FileUploader } from "react-drag-drop-files";
 import { type User, useAuth0 } from "@auth0/auth0-react";
 import { RxAvatar, RxCopy } from "react-icons/rx";
 import { BsCheckSquare, BsCloudUpload } from "react-icons/bs";
-import { uploadFile } from "../../controllers/uploadFile";
-import { Categories } from "../../../../interfaces/Categories";
-import { axiosWrapper } from "../../controllers/axios/axiosWrapper";
+import { uploadFile } from "../controllers/uploadFile";
+import { Categories } from "../../../interfaces/Categories";
+import { axiosWrapper } from "../controllers/axios/axiosWrapper";
 
 interface ICategoryOptions {
 	value: string;
 	label: string;
 }
 
-export const FileIndexPage = (): JSX.Element => {
+export const UploadPage = (): JSX.Element => {
 	const [file, setFile] = useState<File>();
 	const [formData, setFormData] = useState({
 		name: "",
