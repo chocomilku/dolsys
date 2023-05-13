@@ -1,6 +1,5 @@
 import {
 	Avatar,
-	Box,
 	Button,
 	Container,
 	Flex,
@@ -24,32 +23,80 @@ import {
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Select as ReactSelect } from "chakra-react-select";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 import { type User, useAuth0 } from "@auth0/auth0-react";
 import { RxAvatar, RxCopy } from "react-icons/rx";
 import { BsCheckSquare, BsCloudUpload } from "react-icons/bs";
 import { uploadFile } from "../../controllers/uploadFile";
+import { Categories } from "../../../../interfaces/Categories";
+import { axiosWrapper } from "../../controllers/axios/axiosWrapper";
+
+interface ICategoryOptions {
+	value: string;
+	label: string;
+}
 
 export const FileIndexPage = (): JSX.Element => {
 	const [file, setFile] = useState<File>();
+	const [formData, setFormData] = useState({
+		name: "",
+		phase: "",
+		unit: "",
+	});
 	const [fileLink, setFileLink] = useState<string | null>(null);
 	const [isUploading, setIsUploading] = useState<boolean>(false);
-	const { user, getAccessTokenSilently } = useAuth0();
+	const [categoryOptions, setCategoryOptions] = useState<ICategoryOptions[]>(
+		[]
+	);
+	const [selectedCategory, setSelectedCategory] =
+		useState<ICategoryOptions | null>(null);
 
 	const fileLinkUrl = useMemo(() => {
 		if (!fileLink) return window.location.origin;
 		return `${window.location.origin}/${fileLink}`;
 	}, [fileLink]);
 
-	const toast = useToast();
+	const parsedSelectedCategoryId = useMemo(() => {
+		if (!selectedCategory) return;
 
+		const parsedId = parseInt(selectedCategory?.value.split("-")[0]);
+
+		if (isNaN(parsedId)) return;
+
+		return parsedId;
+	}, [selectedCategory]);
+
+	const { user, getAccessTokenSilently } = useAuth0();
+	const toast = useToast();
 	const { onCopy } = useClipboard(fileLinkUrl ?? "");
 
 	const resetForm = () => {
 		setFile(undefined);
-		// other form details here later
+		setFormData({
+			name: "",
+			phase: "",
+			unit: "",
+		});
 	};
+
+	useEffect(() => {
+		const fetchCategoryOptions = async () => {
+			const categories = await axiosWrapper<Categories[]>({
+				url: "/categories",
+				method: "GET",
+			});
+			if (!categories.data) return;
+			const options: ICategoryOptions[] = categories.data.map((category) => {
+				return {
+					value: `${category.id}${category.code && `-${category.code}`}`,
+					label: category.name,
+				};
+			});
+			setCategoryOptions(options);
+		};
+		fetchCategoryOptions();
+	}, []);
 
 	const handleFileChange = (file: File) => {
 		toast({
@@ -61,6 +108,11 @@ export const FileIndexPage = (): JSX.Element => {
 			position: "top-right",
 		});
 		setFile(file);
+	};
+
+	const handleFormChange = (event: FormEvent<HTMLInputElement>) => {
+		const { name, value } = event.currentTarget;
+		setFormData({ ...formData, [name]: value });
 	};
 
 	const handleCopy = () => {
@@ -90,8 +142,14 @@ export const FileIndexPage = (): JSX.Element => {
 		if (!user) return;
 		if (!user.sub) return;
 		if (!file) return;
+		if (!parsedSelectedCategoryId) return;
 
-		const response = await uploadFile(access_token, file, user.sub, 1);
+		const response = await uploadFile(
+			access_token,
+			file,
+			user.sub,
+			parsedSelectedCategoryId
+		);
 
 		if (!response.data) return;
 		setIsUploading(false);
@@ -205,27 +263,38 @@ export const FileIndexPage = (): JSX.Element => {
 							<Input
 								type="text"
 								placeholder="Name"
+								name="name"
 								required
 								colorScheme="purple"
+								onChange={handleFormChange}
 							/>
 						</FormControl>
 						<Flex gap="0.25rem" direction={{ base: "column", md: "row" }}>
-							<Box w={"full"}>
+							<FormControl w={"full"} isRequired>
 								<ReactSelect
-									required
-									options={[
-										{ value: "chocolate", label: "Chocolate" },
-										{ value: "strawberry", label: "Strawberry" },
-										{ value: "vanilla", label: "Vanilla" },
-									]}
+									onChange={(value) => setSelectedCategory(value)}
+									options={categoryOptions}
 									colorScheme="purple"
+									required
 								/>
-							</Box>
-							<FormControl maxW={{ base: "100%", md: "100px" }}>
-								<Input type="text" placeholder="Phase" colorScheme="purple" />
 							</FormControl>
 							<FormControl maxW={{ base: "100%", md: "100px" }}>
-								<Input type="text" placeholder="Unit" colorScheme="purple" />
+								<Input
+									type="text"
+									placeholder="Phase"
+									colorScheme="purple"
+									name="phase"
+									onChange={handleFormChange}
+								/>
+							</FormControl>
+							<FormControl maxW={{ base: "100%", md: "100px" }}>
+								<Input
+									type="text"
+									placeholder="Unit"
+									colorScheme="purple"
+									name="unit"
+									onChange={handleFormChange}
+								/>
 							</FormControl>
 						</Flex>
 						<Button
