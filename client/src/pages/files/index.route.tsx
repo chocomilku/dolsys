@@ -20,6 +20,8 @@ import {
 	useClipboard,
 	useToast,
 	Code,
+	FormErrorMessage,
+	FormLabel,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Select as ReactSelect } from "chakra-react-select";
@@ -44,6 +46,7 @@ export const FileIndexPage = (): JSX.Element => {
 		phase: "",
 		unit: "",
 	});
+	const [isInputErrorEnabled, setInputErrorEnabled] = useState<boolean>(false);
 	const [fileLink, setFileLink] = useState<string | null>(null);
 	const [isUploading, setIsUploading] = useState<boolean>(false);
 	const [categoryOptions, setCategoryOptions] = useState<ICategoryOptions[]>(
@@ -67,12 +70,16 @@ export const FileIndexPage = (): JSX.Element => {
 		return parsedId;
 	}, [selectedCategory]);
 
+	const isCategoryEmpty = selectedCategory === null;
+	const isNameEmpty = formData.name === "";
+
 	const { user, getAccessTokenSilently } = useAuth0();
 	const toast = useToast();
 	const { onCopy } = useClipboard(fileLinkUrl ?? "");
 
 	const resetForm = () => {
 		setFile(undefined);
+		setInputErrorEnabled(false);
 		setFormData({
 			name: "",
 			phase: "",
@@ -129,7 +136,21 @@ export const FileIndexPage = (): JSX.Element => {
 
 	const handleFileUpload = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
+		setInputErrorEnabled(true);
 		setIsUploading(true);
+
+		if (isNameEmpty || isCategoryEmpty) {
+			setIsUploading(false);
+			toast({
+				title: "Form not completed correctly",
+				description: "Please complete the form",
+				status: "error",
+				duration: 5000,
+				isClosable: true,
+				position: "top-right",
+			});
+		}
+
 		toast({
 			title: "File uploading",
 			description: "Please wait while we upload your file",
@@ -160,8 +181,8 @@ export const FileIndexPage = (): JSX.Element => {
 				<>
 					Your file has been uploaded successfully. Access it at:
 					<br />
-					<Link href={`/${fileLink}`} isExternal color="purple.700">
-						{`${window.location.origin}/${fileLink}`}
+					<Link href={`/${response.data.uid}`} isExternal color="purple.700">
+						{`${window.location.origin}/${response.data.uid}`}
 						<ExternalLinkIcon mx="2px" />
 					</Link>
 				</>
@@ -259,7 +280,10 @@ export const FileIndexPage = (): JSX.Element => {
 								/>
 							</GridItem>
 						</Grid>
-						<FormControl>
+						<FormControl
+							isInvalid={isNameEmpty && isInputErrorEnabled}
+							isRequired>
+							<FormLabel>Name:</FormLabel>
 							<Input
 								type="text"
 								placeholder="Name"
@@ -267,33 +291,47 @@ export const FileIndexPage = (): JSX.Element => {
 								required
 								colorScheme="purple"
 								onChange={handleFormChange}
+								value={formData.name}
 							/>
+							<FormErrorMessage>Name should not be empty</FormErrorMessage>
 						</FormControl>
 						<Flex gap="0.25rem" direction={{ base: "column", md: "row" }}>
-							<FormControl w={"full"} isRequired>
+							<FormControl
+								w={"full"}
+								isRequired
+								isInvalid={isCategoryEmpty && isInputErrorEnabled}>
+								<FormLabel>Category</FormLabel>
 								<ReactSelect
 									onChange={(value) => setSelectedCategory(value)}
 									options={categoryOptions}
 									colorScheme="purple"
 									required
+									value={selectedCategory}
 								/>
+								<FormErrorMessage>
+									Category should not be empty
+								</FormErrorMessage>
 							</FormControl>
 							<FormControl maxW={{ base: "100%", md: "100px" }}>
+								<FormLabel>Phase:</FormLabel>
 								<Input
 									type="text"
 									placeholder="Phase"
 									colorScheme="purple"
 									name="phase"
 									onChange={handleFormChange}
+									value={formData.phase}
 								/>
 							</FormControl>
 							<FormControl maxW={{ base: "100%", md: "100px" }}>
+								<FormLabel>Unit:</FormLabel>
 								<Input
 									type="text"
 									placeholder="Unit"
 									colorScheme="purple"
 									name="unit"
 									onChange={handleFormChange}
+									value={formData.unit}
 								/>
 							</FormControl>
 						</Flex>
