@@ -12,6 +12,7 @@ import { AiFillHome } from "react-icons/ai";
 import { BiCategoryAlt } from "react-icons/bi";
 import { VscFiles } from "react-icons/vsc";
 import Footer from "./components/footer/Footer";
+import { FilesRoutes } from "./pages/files";
 
 const navBarRoutes: NavLinkButtonProps[] = [
 	{
@@ -21,7 +22,7 @@ const navBarRoutes: NavLinkButtonProps[] = [
 		end: true,
 	},
 	{
-		to: "/upload",
+		to: "/files",
 		leftIcon: <VscFiles />,
 		pathName: "Files",
 	},
@@ -46,6 +47,7 @@ function App(): JSX.Element {
 				<Routes>
 					<Route path="/" element={<IndexPage />} />
 					<Route path="/upload" element={<UploadPage />} />
+					<Route path="/files/*" element={<FilesRoutes />} />
 					<Route path="/categories/*" element={<CategoryRoutes />} />
 					<Route path="/:uid" element={<IndexUIDPage />} />
 					<Route path="*" element={<NotFoundPage />} />
