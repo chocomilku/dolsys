@@ -1,19 +1,23 @@
 import {
+	Avatar,
 	Button,
 	Container,
 	FormControl,
-	FormLabel,
 	Heading,
-	Kbd,
+	Input,
+	Select,
 	Stack,
 	VStack,
 } from "@chakra-ui/react";
-import Select from "react-select";
+import ReactSelect from "react-select";
 import { useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
+import { type User, useAuth0 } from "@auth0/auth0-react";
+import { RxAvatar } from "react-icons/rx";
 
 export const FileIndexPage = (): JSX.Element => {
 	const [file, setFile] = useState<File>();
+	const { user } = useAuth0();
 	const handleChange = (file: File) => {
 		setFile(file);
 		console.log(file);
@@ -35,22 +39,27 @@ export const FileIndexPage = (): JSX.Element => {
 					/>
 					<Stack direction={"row"}>
 						<FormControl>
-							<FormLabel>File name:</FormLabel>
-							<input type="text" />
+							<Input
+								type="text"
+								placeholder={file?.name ?? "File Name"}
+								isReadOnly
+							/>
 						</FormControl>
 						<FormControl>
-							<FormLabel>User:</FormLabel>
-							<input type="text" />
+							<Select
+								isReadOnly
+								placeholder={user?.name ?? "User"}
+								icon={<AvatarIcon user={user} />}
+							/>
 						</FormControl>
 					</Stack>
 
 					<FormControl>
-						<FormLabel>Name:</FormLabel>
-						<input type="text" />
+						<Input type="text" placeholder="Name" />
 					</FormControl>
 
 					<Stack direction={"row"}>
-						<Select
+						<ReactSelect
 							options={[
 								{ value: "chocolate", label: "Chocolate" },
 								{ value: "strawberry", label: "Strawberry" },
@@ -59,13 +68,11 @@ export const FileIndexPage = (): JSX.Element => {
 						/>
 
 						<FormControl>
-							<FormLabel>Phase:</FormLabel>
-							<input type="text" />
+							<Input type="text" placeholder="Phase" />
 						</FormControl>
 
 						<FormControl>
-							<FormLabel>Unit:</FormLabel>
-							<input type="text" />
+							<Input type="text" placeholder="Unit" />
 						</FormControl>
 					</Stack>
 				</form>
@@ -73,4 +80,9 @@ export const FileIndexPage = (): JSX.Element => {
 			</VStack>
 		</>
 	);
+};
+
+const AvatarIcon = ({ user }: { user: User | undefined }): JSX.Element => {
+	if (!user) return <RxAvatar />;
+	return <Avatar size="xs" src={user?.picture} name={user.name ?? "User"} />;
 };
