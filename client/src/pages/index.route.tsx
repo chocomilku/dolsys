@@ -1,11 +1,16 @@
 import {
+	Box,
 	Button,
 	Card,
+	CardBody,
 	CardHeader,
+	Center,
 	Container,
 	Flex,
 	Heading,
 	Spacer,
+	Text,
+	VStack,
 } from "@chakra-ui/react";
 import HeroBg from "../../assets/hero-bg.svg";
 
@@ -32,6 +37,7 @@ export const IndexPage = (): JSX.Element => {
 					Log In
 				</Button>
 			</Flex>
+
 			<Container maxW="container.xl">
 				<Heading textAlign={"center"} p={6}>
 					Why this that is this?
@@ -72,6 +78,34 @@ export const IndexPage = (): JSX.Element => {
 						</CardHeader>
 					</Card>
 				</Flex>
+
+				<Box p={8}>
+					<Heading textAlign={"center"} p={6}>
+						About the Project + The team
+					</Heading>
+					<Center>
+						<Card maxW={"lg"} w={"full"}>
+							<CardHeader>
+								<Heading as={"h2"} size="lg">
+									Author
+								</Heading>
+							</CardHeader>
+							<hr />
+							<CardBody>
+								<Text size="md">Things here</Text>
+							</CardBody>
+						</Card>
+					</Center>
+				</Box>
+
+				<VStack p={8}>
+					<Heading textAlign={"center"} p={6}>
+						Inquries?
+					</Heading>
+					<Text>
+						Contact us at <a>something here</a>
+					</Text>
+				</VStack>
 			</Container>
 		</>
 	);
