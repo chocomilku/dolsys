@@ -19,6 +19,8 @@ import {
 	AlertTitle,
 	Link,
 	useClipboard,
+	useToast,
+	Code,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Select as ReactSelect } from "chakra-react-select";
@@ -34,21 +36,46 @@ export const FileIndexPage = (): JSX.Element => {
 	const [fileLink, setFileLink] = useState<string | null>(null);
 	const [isUploading, setIsUploading] = useState<boolean>(false);
 	const { user, getAccessTokenSilently } = useAuth0();
+	const toast = useToast();
 
 	const fileLinkUrl = `${window.location.origin}/${fileLink}`;
 	const { onCopy } = useClipboard(fileLinkUrl ?? "");
 
 	const handleFileChange = (file: File) => {
+		toast({
+			title: "File queued to be uploaded",
+			description: <Code>{file.name}</Code>,
+			status: "info",
+			duration: 5000,
+			isClosable: true,
+			position: "top-right",
+		});
 		setFile(file);
 	};
 
 	const handleCopy = () => {
 		onCopy();
+		toast({
+			title: "Copied to clipboard",
+			description: "You can now share the link to anyone!",
+			status: "success",
+			duration: 5000,
+			isClosable: true,
+			position: "top-right",
+		});
 	};
 
 	const handleFileUpload = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		setIsUploading(true);
+		toast({
+			title: "File uploading",
+			description: "Please wait while we upload your file",
+			status: "info",
+			duration: 5000,
+			isClosable: true,
+			position: "top-right",
+		});
 		const access_token = await getAccessTokenSilently();
 		if (!user) return;
 		if (!user.sub) return;
@@ -59,37 +86,56 @@ export const FileIndexPage = (): JSX.Element => {
 		if (!response.data) return;
 		setIsUploading(false);
 		setFileLink(response.data.uid);
+		toast({
+			title: "File uploaded!",
+			description: (
+				<>
+					Your file has been uploaded successfully. Access it at:
+					<br />
+					<Link href={fileLinkUrl} isExternal color="purple.700">
+						{fileLinkUrl} <ExternalLinkIcon mx="2px" />
+					</Link>
+				</>
+			),
+			status: "success",
+			duration: 10000,
+			isClosable: true,
+			position: "top-right",
+		});
 	};
 
 	return (
 		<>
-			<Alert
-				status="success"
-				variant="subtle"
-				flexDirection="column"
-				alignItems="center"
-				justifyContent="center"
-				textAlign="center"
-				height="200px">
-				<AlertIcon boxSize="40px" mr={0} />
-				<AlertTitle mt={4} mb={1} fontSize="lg">
-					File Uploaded!
-				</AlertTitle>
-				<AlertDescription maxWidth="sm">
-					Your file has been uploaded successfully. You can download it at{" "}
-					<Link href={`/${fileLink}`} color="purple.500" isExternal>
-						{fileLinkUrl} <ExternalLinkIcon mx="2px" />
-					</Link>
-					<Icon
-						as={RxCopy}
-						onClick={handleCopy}
-						boxSize="1.1rem"
-						cursor="pointer"
-						display="inline-block"
-					/>
-					.
-				</AlertDescription>
-			</Alert>
+			{fileLink && (
+				<Alert
+					status="success"
+					variant="subtle"
+					flexDirection="column"
+					alignItems="center"
+					justifyContent="center"
+					textAlign="center"
+					height="200px">
+					<AlertIcon boxSize="40px" mr={0} />
+					<AlertTitle mt={4} mb={1} fontSize="lg">
+						File Uploaded!
+					</AlertTitle>
+					<AlertDescription maxWidth="sm">
+						Your file has been uploaded successfully. You can download it at{" "}
+						<Link href={`/${fileLink}`} color="purple.500" isExternal>
+							{fileLinkUrl} <ExternalLinkIcon mx="2px" />
+						</Link>
+						<Icon
+							as={RxCopy}
+							onClick={handleCopy}
+							boxSize="1.1rem"
+							cursor="pointer"
+							display="inline-block"
+						/>
+						.
+					</AlertDescription>
+				</Alert>
+			)}
+
 			<VStack as={Container} maxW="container.md" p={{ base: 4, md: 8 }}>
 				<Heading textAlign="center" pb={8}>
 					Upload Files
