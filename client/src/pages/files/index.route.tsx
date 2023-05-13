@@ -46,6 +46,11 @@ export const FileIndexPage = (): JSX.Element => {
 
 	const { onCopy } = useClipboard(fileLinkUrl ?? "");
 
+	const resetForm = () => {
+		setFile(undefined);
+		// other form details here later
+	};
+
 	const handleFileChange = (file: File) => {
 		toast({
 			title: "File queued to be uploaded",
@@ -108,6 +113,7 @@ export const FileIndexPage = (): JSX.Element => {
 			isClosable: true,
 			position: "top-right",
 		});
+		resetForm();
 	};
 
 	return (
