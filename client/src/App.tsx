@@ -1,6 +1,5 @@
 import { Routes, Route } from "react-router-dom";
 import { IndexPage } from "./pages/index.route";
-import { AdminRoutes } from "./pages/admin";
 import { IndexUIDPage } from "./pages/index.[uid].route";
 import { NotFoundPage } from "./pages/notFound.route";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -47,7 +46,6 @@ function App(): JSX.Element {
 				<Routes>
 					<Route path="/" element={<IndexPage />} />
 					<Route path="/upload" element={<UploadPage />} />
-					<Route path="/admin/*" element={<AdminRoutes />} />
 					<Route path="/categories/*" element={<CategoryRoutes />} />
 					<Route path="/:uid" element={<IndexUIDPage />} />
 					<Route path="*" element={<NotFoundPage />} />
