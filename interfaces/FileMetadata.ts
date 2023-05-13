@@ -5,7 +5,10 @@ export interface FileMetadata {
 	originalname: string;
 	uid?: string;
 	user_id: string;
-	category_id?: number;
+	category_id: number;
+	title?: string;
+	phase_no?: string;
+	unit_no?: string;
 }
 
 export interface FileMetadataWithID extends Omit<FileMetadata, "uid"> {

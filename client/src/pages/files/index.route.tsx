@@ -1,3 +1,3 @@
-export const FileIndexPage = (): JSX.Element => {
-	return <h1>File page here</h1>;
+export const FilesIndexPage = (): JSX.Element => {
+	return <h1>Files page here</h1>;
 };

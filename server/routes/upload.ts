@@ -11,6 +11,7 @@ import {
 	InternalServerError,
 } from "../middleware/errors/errors";
 import { getFileMetadata } from "../controller/getFileMetadata";
+import { FileMetadata } from "../../interfaces/FileMetadata";
 
 const router: Router = Router();
 
@@ -20,26 +21,49 @@ router.post(
 	authMiddleware,
 	checkRequiredPermissions(["upload:files"]),
 	async (
-		req: TypedRequestBody<{ user_id: string; category_id: number }>,
+		req: TypedRequestBody<
+			Omit<Partial<FileMetadata>, "uid" | "path" | "originalname">
+		>,
 		res: Response,
 		next: NextFunction
 	) => {
 		try {
 			if (!req.file) throw new BadRequestError("No file was uploaded");
 
-			const { user_id, category_id } = req.body;
+			const uploadedFileFormBody = req.body;
 			const checkedBody = z
 				.object({
 					user_id: z.string(),
 					category_id: z.coerce.number(),
+					title: z
+						.string()
+						.optional()
+						.transform((value) => (value === "" ? undefined : value)),
+					phase_no: z
+						.string()
+						.optional()
+						.transform((value) => (value === "" ? undefined : value)),
+					unit_no: z
+						.string()
+						.optional()
+						.transform((value) => (value === "" ? undefined : value)),
 				})
-				.parse({ user_id, category_id });
+				.parse({
+					user_id: uploadedFileFormBody.user_id,
+					category_id: uploadedFileFormBody.category_id,
+					title: uploadedFileFormBody.title,
+					phase_no: uploadedFileFormBody.phase_no,
+					unit_no: uploadedFileFormBody.unit_no,
+				});
 
 			const addedId = await addFileMetadata({
 				path: req.file.path,
 				originalname: req.file.originalname,
 				user_id: checkedBody.user_id,
 				category_id: checkedBody.category_id,
+				phase_no: checkedBody.phase_no,
+				unit_no: checkedBody.unit_no,
+				title: checkedBody.title,
 			});
 
 			if (!addedId)

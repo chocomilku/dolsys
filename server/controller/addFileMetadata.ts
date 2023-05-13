@@ -9,7 +9,7 @@ import { BadRequestError } from "../middleware/errors/errors";
 
 const UID_LENGTH = 10;
 
-export const addFileMetadata = async (file: FileMetadata) => {
+export const addFileMetadata = async (file: Omit<FileMetadata, "uid">) => {
 	if (!file.category_id)
 		throw new BadRequestError("Category ID is not defined");
 
@@ -26,8 +26,11 @@ export const addFileMetadata = async (file: FileMetadata) => {
 		return uid;
 	};
 
-	file.uid = await generateAndCheckUIDCollision();
-	const response = await db("files").insert(file);
+	const finalizedFile: FileMetadata = {
+		...file,
+		uid: await generateAndCheckUIDCollision(),
+	};
+	const response = await db("files").insert(finalizedFile);
 	return response;
 };
 
