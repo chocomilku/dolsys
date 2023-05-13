@@ -4,7 +4,7 @@ import { AdminRoutes } from "./pages/admin";
 import { IndexUIDPage } from "./pages/index.[uid].route";
 import { NotFoundPage } from "./pages/notFound.route";
 import { useAuth0 } from "@auth0/auth0-react";
-import { FileRoutes } from "./pages/files";
+import { FileRoutes } from "./pages/upload";
 import { CategoryRoutes } from "./pages/categories";
 
 import NavBar from "./components/NavBar";
