@@ -1,4 +1,12 @@
-import { Button, Container, Flex, Heading, Spacer } from "@chakra-ui/react";
+import {
+	Button,
+	Card,
+	CardHeader,
+	Container,
+	Flex,
+	Heading,
+	Spacer,
+} from "@chakra-ui/react";
 import HeroBg from "../../assets/hero-bg.svg";
 
 export const IndexPage = (): JSX.Element => {
@@ -24,7 +32,47 @@ export const IndexPage = (): JSX.Element => {
 					Log In
 				</Button>
 			</Flex>
-			<Container maxW="container.xl">a</Container>
+			<Container maxW="container.xl">
+				<Heading textAlign={"center"} p={6}>
+					Why this that is this?
+				</Heading>
+				<Flex
+					p={8}
+					flexWrap={"wrap"}
+					flexDirection={"row"}
+					gap={"2rem"}
+					alignContent={"center"}
+					justifyContent={"center"}>
+					<Card maxW={"lg"} w={"full"}>
+						<CardHeader>
+							<Heading as={"h2"} size="lg">
+								Card
+							</Heading>
+						</CardHeader>
+					</Card>
+					<Card maxW={"lg"} w={"full"}>
+						<CardHeader>
+							<Heading as={"h2"} size="lg">
+								Card
+							</Heading>
+						</CardHeader>
+					</Card>
+					<Card maxW={"lg"} w={"full"}>
+						<CardHeader>
+							<Heading as={"h2"} size="lg">
+								Card
+							</Heading>
+						</CardHeader>
+					</Card>
+					<Card maxW={"lg"} w={"full"}>
+						<CardHeader>
+							<Heading as={"h2"} size="lg">
+								Card
+							</Heading>
+						</CardHeader>
+					</Card>
+				</Flex>
+			</Container>
 		</>
 	);
 };

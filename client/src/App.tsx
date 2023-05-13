@@ -43,11 +43,7 @@ function App(): JSX.Element {
 				user={user}
 				navBarLinks={navBarRoutes}
 			/>
-			<main
-				style={{
-					width: "100%",
-					height: "100vh",
-				}}>
+			<main>
 				<Routes>
 					<Route path="/" element={<IndexPage />} />
 					<Route path="/admin/*" element={<AdminRoutes />} />
