@@ -2,7 +2,10 @@ import {
 	Avatar,
 	Button,
 	Container,
+	Flex,
 	FormControl,
+	Grid,
+	GridItem,
 	Heading,
 	Input,
 	Select,
@@ -37,28 +40,28 @@ export const FileIndexPage = (): JSX.Element => {
 						required={true}
 						// apperently, message after upload cannot be changed yet so lets wait for https://github.com/KarimMokhtar/react-drag-drop-files/pull/118 to be merged to be able to do update the text
 					/>
-					<Stack direction={"row"}>
-						<FormControl>
+					<Grid templateColumns={"2fr 1fr"} gap="0.25rem">
+						<GridItem as={FormControl}>
 							<Input
 								type="text"
 								placeholder={file?.name ?? "File Name"}
 								isReadOnly
 							/>
-						</FormControl>
-						<FormControl>
+						</GridItem>
+						<GridItem as={FormControl}>
 							<Select
 								isReadOnly
 								placeholder={user?.name ?? "User"}
 								icon={<AvatarIcon user={user} />}
 							/>
-						</FormControl>
-					</Stack>
+						</GridItem>
+					</Grid>
 
 					<FormControl>
 						<Input type="text" placeholder="Name" />
 					</FormControl>
 
-					<Stack direction={"row"}>
+					<Flex gap="0.25rem">
 						<ReactSelect
 							options={[
 								{ value: "chocolate", label: "Chocolate" },
@@ -67,14 +70,14 @@ export const FileIndexPage = (): JSX.Element => {
 							]}
 						/>
 
-						<FormControl>
+						<FormControl maxW={"100px"}>
 							<Input type="text" placeholder="Phase" />
 						</FormControl>
 
-						<FormControl>
+						<FormControl maxW={"100px"}>
 							<Input type="text" placeholder="Unit" />
 						</FormControl>
-					</Stack>
+					</Flex>
 				</form>
 				<Button>Upload</Button>
 			</VStack>
