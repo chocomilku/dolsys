@@ -35,9 +35,18 @@ router.post(
 				.object({
 					user_id: z.string(),
 					category_id: z.coerce.number(),
-					title: z.string().optional(),
-					phase_no: z.string().optional(),
-					unit_no: z.string().optional(),
+					title: z
+						.string()
+						.optional()
+						.transform((value) => (value === "" ? undefined : value)),
+					phase_no: z
+						.string()
+						.optional()
+						.transform((value) => (value === "" ? undefined : value)),
+					unit_no: z
+						.string()
+						.optional()
+						.transform((value) => (value === "" ? undefined : value)),
 				})
 				.parse({
 					user_id: uploadedFileFormBody.user_id,

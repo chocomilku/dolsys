@@ -165,12 +165,13 @@ export const FileIndexPage = (): JSX.Element => {
 		if (!file) return;
 		if (!parsedSelectedCategoryId) return;
 
-		const response = await uploadFile(
-			access_token,
-			file,
-			user.sub,
-			parsedSelectedCategoryId
-		);
+		const response = await uploadFile(access_token, file, {
+			user_id: user.sub,
+			category_id: parsedSelectedCategoryId,
+			title: formData.name,
+			phase_no: formData.phase,
+			unit_no: formData.unit,
+		});
 
 		if (!response.data) return;
 		setIsUploading(false);
