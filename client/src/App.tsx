@@ -13,6 +13,7 @@ import { BiCategoryAlt } from "react-icons/bi";
 import { VscFiles } from "react-icons/vsc";
 import Footer from "./components/footer/Footer";
 import { FilesRoutes } from "./pages/files";
+import { MdCloudUpload } from "react-icons/md";
 
 const navBarRoutes: NavLinkButtonProps[] = [
 	{
@@ -30,6 +31,11 @@ const navBarRoutes: NavLinkButtonProps[] = [
 		to: "/categories",
 		leftIcon: <BiCategoryAlt />,
 		pathName: "Categories",
+	},
+	{
+		to: "/upload",
+		leftIcon: <MdCloudUpload />,
+		pathName: "Upload",
 	},
 ];
 
