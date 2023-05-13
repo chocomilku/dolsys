@@ -24,7 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Select as ReactSelect } from "chakra-react-select";
-import { FormEvent, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 import { type User, useAuth0 } from "@auth0/auth0-react";
 import { RxAvatar, RxCopy } from "react-icons/rx";
@@ -36,9 +36,14 @@ export const FileIndexPage = (): JSX.Element => {
 	const [fileLink, setFileLink] = useState<string | null>(null);
 	const [isUploading, setIsUploading] = useState<boolean>(false);
 	const { user, getAccessTokenSilently } = useAuth0();
+
+	const fileLinkUrl = useMemo(() => {
+		if (!fileLink) return window.location.origin;
+		return `${window.location.origin}/${fileLink}`;
+	}, [fileLink]);
+
 	const toast = useToast();
 
-	const fileLinkUrl = `${window.location.origin}/${fileLink}`;
 	const { onCopy } = useClipboard(fileLinkUrl ?? "");
 
 	const handleFileChange = (file: File) => {
@@ -92,8 +97,9 @@ export const FileIndexPage = (): JSX.Element => {
 				<>
 					Your file has been uploaded successfully. Access it at:
 					<br />
-					<Link href={fileLinkUrl} isExternal color="purple.700">
-						{fileLinkUrl} <ExternalLinkIcon mx="2px" />
+					<Link href={`/${fileLink}`} isExternal color="purple.700">
+						{`${window.location.origin}/${fileLink}`}
+						<ExternalLinkIcon mx="2px" />
 					</Link>
 				</>
 			),
