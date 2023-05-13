@@ -13,24 +13,42 @@ import {
 	VStack,
 	Text,
 	Icon,
+	Alert,
+	AlertDescription,
+	AlertIcon,
+	AlertTitle,
+	Link,
+	useClipboard,
 } from "@chakra-ui/react";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Select as ReactSelect } from "chakra-react-select";
 import { FormEvent, useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 import { type User, useAuth0 } from "@auth0/auth0-react";
-import { RxAvatar } from "react-icons/rx";
+import { RxAvatar, RxCopy } from "react-icons/rx";
 import { BsCheckSquare, BsCloudUpload } from "react-icons/bs";
 import { uploadFile } from "../../controllers/uploadFile";
 
 export const FileIndexPage = (): JSX.Element => {
 	const [file, setFile] = useState<File>();
+	const [fileLink, setFileLink] = useState<string | null>(null);
+	const [isUploading, setIsUploading] = useState<boolean>(false);
 	const { user, getAccessTokenSilently } = useAuth0();
-	const handleChange = (file: File) => {
+
+	const fileLinkUrl = `${window.location.origin}/${fileLink}`;
+	const { onCopy } = useClipboard(fileLinkUrl ?? "");
+
+	const handleFileChange = (file: File) => {
 		setFile(file);
+	};
+
+	const handleCopy = () => {
+		onCopy();
 	};
 
 	const handleFileUpload = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
+		setIsUploading(true);
 		const access_token = await getAccessTokenSilently();
 		if (!user) return;
 		if (!user.sub) return;
@@ -39,11 +57,39 @@ export const FileIndexPage = (): JSX.Element => {
 		const response = await uploadFile(access_token, file, user.sub, 1);
 
 		if (!response.data) return;
-		alert(response.data.uid);
+		setIsUploading(false);
+		setFileLink(response.data.uid);
 	};
 
 	return (
 		<>
+			<Alert
+				status="success"
+				variant="subtle"
+				flexDirection="column"
+				alignItems="center"
+				justifyContent="center"
+				textAlign="center"
+				height="200px">
+				<AlertIcon boxSize="40px" mr={0} />
+				<AlertTitle mt={4} mb={1} fontSize="lg">
+					File Uploaded!
+				</AlertTitle>
+				<AlertDescription maxWidth="sm">
+					Your file has been uploaded successfully. You can download it at{" "}
+					<Link href={`/${fileLink}`} color="purple.500" isExternal>
+						{fileLinkUrl} <ExternalLinkIcon mx="2px" />
+					</Link>
+					<Icon
+						as={RxCopy}
+						onClick={handleCopy}
+						boxSize="1.1rem"
+						cursor="pointer"
+						display="inline-block"
+					/>
+					.
+				</AlertDescription>
+			</Alert>
 			<VStack as={Container} maxW="container.md" p={{ base: 4, md: 8 }}>
 				<Heading textAlign="center" pb={8}>
 					Upload Files
@@ -52,7 +98,7 @@ export const FileIndexPage = (): JSX.Element => {
 				<form onSubmit={handleFileUpload}>
 					<Flex direction={"column"} w={{ base: "100%", md: "xl" }} gap="1rem">
 						<FileUploader
-							handleChange={handleChange}
+							handleChange={handleFileChange}
 							name="file"
 							multiple={false}
 							required={true}>
@@ -130,7 +176,9 @@ export const FileIndexPage = (): JSX.Element => {
 							colorScheme="purple"
 							size={"lg"}
 							w={{ base: "100%", md: "md" }}
-							alignSelf={"center"}>
+							alignSelf={"center"}
+							isLoading={isUploading}
+							loadingText="Uploading">
 							Upload
 						</Button>
 					</Flex>
