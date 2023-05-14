@@ -12,7 +12,13 @@ router.get(
 	async (req, res) => {
 		const files = await getFilesMetadata();
 
-		return res.status(200).json(files);
+		const filesWithoutPathAndUser = files.map((file) => {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { path, user_id, ...fileWithoutPathAndUser } = file;
+			return fileWithoutPathAndUser;
+		});
+
+		return res.status(200).json(filesWithoutPathAndUser);
 	}
 );
 
