@@ -47,8 +47,6 @@ router.get(
 			if (typeof totalItems.count === "string")
 				throw new InternalServerError("Could not count files");
 
-			console.log(totalItems);
-
 			const pagination = {
 				totalItems: totalItems.count,
 				currentPage: parsedPage,

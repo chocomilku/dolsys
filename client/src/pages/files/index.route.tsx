@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 
 import { FilesWithCategoriesWithoutPathAndUserID } from "../../../../interfaces/FileMetadata";
+import { PaginationDetails } from "../../../../interfaces/Pagination";
 import { useEffect, useState } from "react";
 import { axiosWrapperWithAuthToken } from "../../controllers/axios/axiosWrapperWithAuthToken";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -32,14 +33,19 @@ export const FilesIndexPage = (): JSX.Element => {
 			const access_token = await getAccessTokenSilently();
 
 			const response = await axiosWrapperWithAuthToken<
-				FilesWithCategoriesWithoutPathAndUserID[]
+				FilesWithCategoriesWithoutPathAndUserID[] & PaginationDetails
 			>(access_token, {
 				method: "GET",
 				url: "/files",
 			});
 
 			if (!response.data) return;
-			setFilesList(response.data);
+
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { currentPage, totalItems, totalPages, limit, ...filesData } =
+				response.data;
+
+			setFilesList(filesData);
 		};
 		fetchFilesList();
 	}, [getAccessTokenSilently]);
