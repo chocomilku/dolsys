@@ -62,7 +62,7 @@ router.get(
 
 			return res
 				.status(200)
-				.json({ ...filesWithoutPathAndUser, ...pagination });
+				.json({ files: filesWithoutPathAndUser, pagination });
 		} catch (error) {
 			next(error);
 		}

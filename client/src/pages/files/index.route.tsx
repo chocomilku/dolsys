@@ -26,15 +26,17 @@ import {
 export const FilesIndexPage = (): JSX.Element => {
 	const [filesList, setFilesList] =
 		useState<FilesWithCategoriesWithoutPathAndUserID[]>();
+	const [pagination, setPagination] = useState<PaginationDetails>();
 	const { getAccessTokenSilently } = useAuth0();
 
 	useEffect(() => {
 		const fetchFilesList = async () => {
 			const access_token = await getAccessTokenSilently();
 
-			const response = await axiosWrapperWithAuthToken<
-				FilesWithCategoriesWithoutPathAndUserID[] & PaginationDetails
-			>(access_token, {
+			const response = await axiosWrapperWithAuthToken<{
+				files: FilesWithCategoriesWithoutPathAndUserID[];
+				pagination: PaginationDetails;
+			}>(access_token, {
 				method: "GET",
 				url: "/files",
 			});
@@ -42,10 +44,10 @@ export const FilesIndexPage = (): JSX.Element => {
 			if (!response.data) return;
 
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const { currentPage, totalItems, totalPages, limit, ...filesData } =
-				response.data;
+			const { files, pagination } = response.data;
 
-			setFilesList(filesData);
+			setFilesList(files);
+			setPagination(pagination);
 		};
 		fetchFilesList();
 	}, [getAccessTokenSilently]);
