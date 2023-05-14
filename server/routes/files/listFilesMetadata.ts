@@ -2,7 +2,11 @@ import { Router } from "express";
 import { getFilesMetadata } from "../../controller/getFileMetadata";
 import { authMiddleware } from "../../middleware/jwt-bearer/authOptions";
 import { checkRequiredPermissions } from "../../middleware/auth0/checkPermissions";
-import { BadRequestError } from "../../middleware/errors/errors";
+import {
+	BadRequestError,
+	InternalServerError,
+} from "../../middleware/errors/errors";
+import { db } from "../../middleware/knex/credentials";
 
 const router: Router = Router();
 
@@ -30,9 +34,27 @@ router.get(
 			if (offset < 0) throw new BadRequestError("Invalid offset");
 
 			const files = await getFilesMetadata({
-				limit: parseInt(limit.toString()),
+				limit: parsedLimit,
 				offset,
 			});
+
+			const totalItems = await db("files_with_categories")
+				.count({ count: "*" })
+				.first();
+
+			if (!totalItems || !totalItems.count)
+				throw new InternalServerError("Could not count files");
+			if (typeof totalItems.count === "string")
+				throw new InternalServerError("Could not count files");
+
+			console.log(totalItems);
+
+			const pagination = {
+				totalItems: totalItems.count,
+				currentPage: parsedPage,
+				limit: parsedLimit,
+				totalPages: Math.ceil(totalItems.count / parsedLimit),
+			};
 
 			const filesWithoutPathAndUser = files.map((file) => {
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -40,7 +62,9 @@ router.get(
 				return fileWithoutPathAndUser;
 			});
 
-			return res.status(200).json(filesWithoutPathAndUser);
+			return res
+				.status(200)
+				.json({ ...filesWithoutPathAndUser, ...pagination });
 		} catch (error) {
 			next(error);
 		}
