@@ -1,28 +1,32 @@
 import {
 	Box,
-	Card,
-	CardBody,
-	CardFooter,
-	CardHeader,
-	Code,
 	Container,
 	Heading,
-	IconButton,
-	Stack,
+	Table,
+	Tbody,
+	Td,
+	Th,
+	Thead,
+	Tr,
 	VStack,
-	Text,
 } from "@chakra-ui/react";
-import { FiDelete } from "react-icons/fi";
+
 import { FilesWithCategoriesWithoutPathAndUserID } from "../../../../interfaces/FileMetadata";
 import { useEffect, useState } from "react";
 import { axiosWrapperWithAuthToken } from "../../controllers/axios/axiosWrapperWithAuthToken";
 import { useAuth0 } from "@auth0/auth0-react";
+import {
+	createColumnHelper,
+	flexRender,
+	getCoreRowModel,
+	useReactTable,
+} from "@tanstack/react-table";
 
 export const FilesIndexPage = (): JSX.Element => {
-	const [filesList, setFilesList] = useState<
-		FilesWithCategoriesWithoutPathAndUserID[]
-	>([]);
+	const [filesList, setFilesList] =
+		useState<FilesWithCategoriesWithoutPathAndUserID[]>();
 	const { getAccessTokenSilently } = useAuth0();
+
 	useEffect(() => {
 		const fetchFilesList = async () => {
 			const access_token = await getAccessTokenSilently();
@@ -40,37 +44,84 @@ export const FilesIndexPage = (): JSX.Element => {
 		fetchFilesList();
 	}, [getAccessTokenSilently]);
 
+	const columnHelper =
+		createColumnHelper<FilesWithCategoriesWithoutPathAndUserID>();
+
+	const columnKeys: (keyof FilesWithCategoriesWithoutPathAndUserID)[] = [
+		"id",
+		"originalname",
+		"created_at",
+		"uid",
+		"downloadCount",
+		"category_id",
+		"name",
+		"code",
+		"scope_level",
+		"title",
+		"phase_no",
+		"unit_no",
+	];
+
+	const columns = columnKeys.map((key) => {
+		return columnHelper.accessor(
+			key as keyof FilesWithCategoriesWithoutPathAndUserID,
+			{
+				header: key,
+				cell: (info) => info.getValue(),
+			}
+		);
+	});
+
+	const tableInstance = useReactTable({
+		columns,
+		data: filesList ?? [],
+		getCoreRowModel: getCoreRowModel(),
+	});
+
 	return (
 		<>
-			<VStack as={Container} maxW="container.lg" p={{ base: 4, md: 8 }}>
+			<VStack as={Container} maxW="container.xl" p={{ base: 4, md: 8 }}>
 				<Heading textAlign="center" pb={8}>
 					Files
 				</Heading>
-				<Stack direction="column" spacing="4">
-					{filesList.map((file, index) => {
-						return (
-							<>
-								<Box
-									key={index}
-									display="flex"
-									alignItems="center"
-									justifyContent="space-between"
-									p={2}
-									borderWidth={1}
-									borderRadius="md">
-									<Text>{file.originalname}</Text>
-									<IconButton
-										icon={<FiDelete />}
-										variant="ghost"
-										colorScheme="red"
-										onClick={() => console.log("e")}
-										aria-label="Delete file"
-									/>
-								</Box>
-							</>
-						);
-					})}
-				</Stack>
+				<Box w={"full"} overflowX="scroll">
+					<Table>
+						<Thead>
+							{tableInstance.getHeaderGroups().map((headerGroup) => {
+								return (
+									<Tr key={headerGroup.id}>
+										{headerGroup.headers.map((header) => {
+											return (
+												<Th key={header.id}>
+													{flexRender(
+														header.column.columnDef.header,
+														header.getContext()
+													)}
+												</Th>
+											);
+										})}
+									</Tr>
+								);
+							})}
+						</Thead>
+						<Tbody>
+							{tableInstance.getRowModel().rows.map((row) => {
+								return (
+									<Tr key={row.id}>
+										{row.getVisibleCells().map((cell) => (
+											<Td key={cell.id}>
+												{flexRender(
+													cell.column.columnDef.cell,
+													cell.getContext()
+												)}
+											</Td>
+										))}
+									</Tr>
+								);
+							})}
+						</Tbody>
+					</Table>
+				</Box>
 			</VStack>
 		</>
 	);
