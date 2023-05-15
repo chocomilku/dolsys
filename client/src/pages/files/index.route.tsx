@@ -12,6 +12,8 @@ import {
 	VStack,
 	HStack,
 	Text,
+	useToast,
+	Code,
 } from "@chakra-ui/react";
 import {
 	HiChevronLeft,
@@ -41,6 +43,7 @@ export const FilesIndexPage = (): JSX.Element => {
 	const [pagination, setPagination] = useState<PaginationDetails>();
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const { getAccessTokenSilently } = useAuth0();
+	const toast = useToast();
 
 	const editFile = (cell_id: number) => {
 		// real function later
@@ -48,10 +51,34 @@ export const FilesIndexPage = (): JSX.Element => {
 		alert("edit " + toBeEditedFile.uid);
 	};
 
-	const deleteFile = (cell_id: number) => {
-		// real function later
+	const deleteFile = async (cell_id: number) => {
 		const toBeDeletedFile = filesList[cell_id];
-		alert("delete " + toBeDeletedFile.uid);
+
+		const response = axiosWrapperWithAuthToken<Record<string, never>>(
+			await getAccessTokenSilently(),
+			{
+				method: "DELETE",
+				url: `/files/${toBeDeletedFile.uid}`,
+			}
+		);
+
+		if (!response) return;
+		const updatedFilesList = filesList.filter(
+			(file) => file.uid !== toBeDeletedFile.uid
+		);
+		setFilesList(updatedFilesList);
+
+		toast({
+			title: "File Deleted",
+			description: (
+				<p>
+					File <Code>{toBeDeletedFile.originalname}</Code> has been deleted.
+				</p>
+			),
+			status: "success",
+			duration: 5000,
+			isClosable: true,
+		});
 	};
 
 	useEffect(() => {
