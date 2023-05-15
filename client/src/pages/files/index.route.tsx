@@ -21,7 +21,7 @@ import {
 } from "react-icons/hi";
 import { FilesWithCategoriesWithoutPathAndUserID } from "../../../../interfaces/FileMetadata";
 import { PaginationDetails } from "../../../../interfaces/Pagination";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { axiosWrapperWithAuthToken } from "../../controllers/axios/axiosWrapperWithAuthToken";
 import { useAuth0 } from "@auth0/auth0-react";
 import {
@@ -30,22 +30,28 @@ import {
 	getCoreRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 
 const LIMIT = 10;
 
 export const FilesIndexPage = (): JSX.Element => {
-	const [filesList, setFilesList] =
-		useState<FilesWithCategoriesWithoutPathAndUserID[]>();
+	const [filesList, setFilesList] = useState<
+		FilesWithCategoriesWithoutPathAndUserID[]
+	>([]);
 	const [pagination, setPagination] = useState<PaginationDetails>();
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const { getAccessTokenSilently } = useAuth0();
 
-	const offset = useMemo(() => {
-		return (currentPage - 1) * LIMIT;
-	}, [currentPage]);
+	const editFile = (cell_id: number) => {
+		// real function later
+		const toBeEditedFile = filesList[cell_id];
+		alert("edit " + toBeEditedFile.uid);
+	};
 
-	const indexToOffset = (index: number) => {
-		return index + 1 + offset;
+	const deleteFile = (cell_id: number) => {
+		// real function later
+		const toBeDeletedFile = filesList[cell_id];
+		alert("delete " + toBeDeletedFile.uid);
 	};
 
 	useEffect(() => {
@@ -66,7 +72,6 @@ export const FilesIndexPage = (): JSX.Element => {
 
 			if (!response.data) return;
 
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { files, pagination } = response.data;
 
 			setFilesList(files);
@@ -101,22 +106,39 @@ export const FilesIndexPage = (): JSX.Element => {
 	];
 
 	const columns = columnKeys.map((key) => {
-		if (!(key === "action")) {
-			return columnHelper.accessor(
-				key as keyof FilesWithCategoriesWithoutPathAndUserID,
-				{
-					header: key,
-					cell: (info) => info.getValue(),
-				}
-			);
+		if (key === "action") {
+			return columnHelper.display({
+				id: "action",
+				cell: (props) => {
+					return (
+						<HStack>
+							<IconButton
+								aria-label="Edit File"
+								variant="solid"
+								colorScheme="blue"
+								icon={<AiFillEdit />}
+								onClick={() => editFile(props.row.index)}
+							/>
+							<IconButton
+								aria-label="Delete File"
+								variant="solid"
+								colorScheme="red"
+								icon={<AiFillDelete />}
+								onClick={() => deleteFile(props.row.index)}
+							/>
+						</HStack>
+					);
+				},
+			});
 		}
 
-		return columnHelper.display({
-			id: "action",
-			cell: (props) => {
-				return <p>{indexToOffset(props.row.index)}</p>;
-			},
-		});
+		return columnHelper.accessor(
+			key as keyof FilesWithCategoriesWithoutPathAndUserID,
+			{
+				header: key,
+				cell: (info) => info.getValue(),
+			}
+		);
 	});
 
 	const tableInstance = useReactTable({
