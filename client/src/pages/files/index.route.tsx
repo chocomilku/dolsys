@@ -21,7 +21,7 @@ import {
 } from "react-icons/hi";
 import { FilesWithCategoriesWithoutPathAndUserID } from "../../../../interfaces/FileMetadata";
 import { PaginationDetails } from "../../../../interfaces/Pagination";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { axiosWrapperWithAuthToken } from "../../controllers/axios/axiosWrapperWithAuthToken";
 import { useAuth0 } from "@auth0/auth0-react";
 import {
@@ -31,12 +31,22 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 
+const LIMIT = 10;
+
 export const FilesIndexPage = (): JSX.Element => {
 	const [filesList, setFilesList] =
 		useState<FilesWithCategoriesWithoutPathAndUserID[]>();
 	const [pagination, setPagination] = useState<PaginationDetails>();
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const { getAccessTokenSilently } = useAuth0();
+
+	const offset = useMemo(() => {
+		return (currentPage - 1) * LIMIT;
+	}, [currentPage]);
+
+	const indexToOffset = (index: number) => {
+		return index + 1 + offset;
+	};
 
 	useEffect(() => {
 		const fetchFilesList = async () => {
@@ -50,7 +60,7 @@ export const FilesIndexPage = (): JSX.Element => {
 				url: "/files",
 				params: {
 					page: currentPage,
-					limit: 10,
+					limit: LIMIT,
 				},
 			});
 
@@ -69,7 +79,13 @@ export const FilesIndexPage = (): JSX.Element => {
 	const columnHelper =
 		createColumnHelper<FilesWithCategoriesWithoutPathAndUserID>();
 
-	const columnKeys: (keyof FilesWithCategoriesWithoutPathAndUserID)[] = [
+	type AddColumnKey = FilesWithCategoriesWithoutPathAndUserID & {
+		action: unknown;
+	};
+	type ColumnKeys = (keyof AddColumnKey)[];
+
+	const columnKeys: ColumnKeys = [
+		"action",
 		"id",
 		"originalname",
 		"created_at",
@@ -85,13 +101,22 @@ export const FilesIndexPage = (): JSX.Element => {
 	];
 
 	const columns = columnKeys.map((key) => {
-		return columnHelper.accessor(
-			key as keyof FilesWithCategoriesWithoutPathAndUserID,
-			{
-				header: key,
-				cell: (info) => info.getValue(),
-			}
-		);
+		if (!(key === "action")) {
+			return columnHelper.accessor(
+				key as keyof FilesWithCategoriesWithoutPathAndUserID,
+				{
+					header: key,
+					cell: (info) => info.getValue(),
+				}
+			);
+		}
+
+		return columnHelper.display({
+			id: "action",
+			cell: (props) => {
+				return <p>{indexToOffset(props.row.index)}</p>;
+			},
+		});
 	});
 
 	const tableInstance = useReactTable({
@@ -163,7 +188,7 @@ export const FilesIndexPage = (): JSX.Element => {
 					/>
 
 					<Text>
-						Page {pagination?.currentPage} / {pagination?.totalPages}
+						Page {currentPage} / {pagination?.totalPages}
 					</Text>
 
 					<IconButton
