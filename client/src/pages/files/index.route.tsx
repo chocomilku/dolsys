@@ -14,6 +14,8 @@ import {
 	Text,
 	useToast,
 	Code,
+	useDisclosure,
+	Portal,
 } from "@chakra-ui/react";
 import {
 	HiChevronLeft,
@@ -33,6 +35,7 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { UpdateForm } from "../../components/modal/UpdateForm";
 
 const LIMIT = 10;
 
@@ -43,12 +46,18 @@ export const FilesIndexPage = (): JSX.Element => {
 	const [pagination, setPagination] = useState<PaginationDetails>();
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const { getAccessTokenSilently } = useAuth0();
+	const {
+		isOpen: isModalOpen,
+		onOpen: onModalOpen,
+		onClose: onModalClose,
+	} = useDisclosure();
 	const toast = useToast();
 
 	const editFile = (cell_id: number) => {
 		// real function later
-		const toBeEditedFile = filesList[cell_id];
-		alert("edit " + toBeEditedFile.uid);
+		// use modals
+		onModalOpen();
+		// const toBeEditedFile = filesList[cell_id];
 	};
 
 	const deleteFile = async (cell_id: number) => {
@@ -258,6 +267,17 @@ export const FilesIndexPage = (): JSX.Element => {
 					/>
 				</HStack>
 			</VStack>
+			<Portal>
+				<UpdateForm
+					isOpen={isModalOpen}
+					onClose={onModalClose}
+					formData={{
+						header: "Edit something",
+						submitAction: () => console.log("hi"),
+					}}>
+					<Text>hi</Text>
+				</UpdateForm>
+			</Portal>
 		</>
 	);
 };
