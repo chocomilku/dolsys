@@ -35,7 +35,7 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
-import { UpdateForm } from "../../components/modal/UpdateForm";
+import { BaseFormModal } from "../../components/modal/BaseFormModal";
 
 const LIMIT = 10;
 
@@ -57,7 +57,8 @@ export const FilesIndexPage = (): JSX.Element => {
 		// real function later
 		// use modals
 		onModalOpen();
-		// const toBeEditedFile = filesList[cell_id];
+		const toBeEditedFile = filesList[cell_id];
+		console.log(toBeEditedFile);
 	};
 
 	const deleteFile = async (cell_id: number) => {
@@ -268,15 +269,17 @@ export const FilesIndexPage = (): JSX.Element => {
 				</HStack>
 			</VStack>
 			<Portal>
-				<UpdateForm
+				<BaseFormModal
 					isOpen={isModalOpen}
 					onClose={onModalClose}
 					formData={{
 						header: "Edit something",
-						submitAction: () => console.log("hi"),
+						submit: {
+							submitAction: () => console.log("hi"),
+						},
 					}}>
 					<Text>hi</Text>
-				</UpdateForm>
+				</BaseFormModal>
 			</Portal>
 		</>
 	);

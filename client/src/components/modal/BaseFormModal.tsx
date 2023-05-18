@@ -11,31 +11,43 @@ import {
 } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
-interface UpdateFormProps {
+interface BaseFormModalProps {
 	children?: ReactNode;
 	isOpen: boolean;
 	onClose: () => void;
 	formData: {
 		header: string;
-		submitText?: string;
-		submitAction?: React.MouseEventHandler<HTMLButtonElement>;
+		submit?: {
+			submitText?: string;
+			submitAction?: React.MouseEventHandler<HTMLButtonElement>;
+		};
 	};
 }
 
-export const UpdateForm = (props: UpdateFormProps) => {
+export const BaseFormModal = (props: BaseFormModalProps) => {
+	const closeOnClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+		if (props.formData.submit && props.formData.submit.submitAction) {
+			props.formData.submit.submitAction(event);
+		}
+		props.onClose();
+	};
+
 	return (
 		<Modal isOpen={props.isOpen} onClose={props.onClose}>
 			<ModalOverlay />
 			<ModalContent>
 				<ModalHeader>{props.formData.header}</ModalHeader>
 				<ModalCloseButton />
+				<hr />
 				<ModalBody>{props.children}</ModalBody>
 
 				<ModalFooter as={Flex} flexDirection="row" gap="0.5rem">
-					<Button colorScheme="green" onClick={props.formData.submitAction}>
-						{props.formData.submitText ?? "Save"}
-					</Button>
-					<Button colorScheme="blackAlpha" mr={3} onClick={props.onClose}>
+					{props.formData.submit && (
+						<Button colorScheme="green" onClick={closeOnClick}>
+							{props.formData.submit.submitText ?? "Save"}
+						</Button>
+					)}
+					<Button colorScheme="blackAlpha" onClick={props.onClose}>
 						Cancel
 					</Button>
 				</ModalFooter>
