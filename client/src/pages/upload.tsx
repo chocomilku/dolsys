@@ -1,5 +1,4 @@
 import {
-	Avatar,
 	Button,
 	Container,
 	Flex,
@@ -24,20 +23,15 @@ import {
 	FormLabel,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
-import { Select as ReactSelect } from "chakra-react-select";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
-import { type User, useAuth0 } from "@auth0/auth0-react";
-import { RxAvatar, RxCopy } from "react-icons/rx";
+import { useAuth0 } from "@auth0/auth0-react";
+import { RxCopy } from "react-icons/rx";
 import { BsCheckSquare, BsCloudUpload } from "react-icons/bs";
 import { uploadFile } from "../controllers/uploadFile";
-import { Categories } from "../../../interfaces/Categories";
-import { axiosWrapper } from "../controllers/axios/axiosWrapper";
-
-interface ICategoryOptions {
-	value: string;
-	label: string;
-}
+import { AvatarIcon } from "../components/AvatarIcon";
+import { ICategoryOptions } from "../../../interfaces/Categories";
+import { FormCategoriesSelect } from "../components/form/FormCategoriesSelect";
 
 export const UploadPage = (): JSX.Element => {
 	const [file, setFile] = useState<File>();
@@ -49,9 +43,7 @@ export const UploadPage = (): JSX.Element => {
 	const [isInputErrorEnabled, setInputErrorEnabled] = useState<boolean>(false);
 	const [fileLink, setFileLink] = useState<string | null>(null);
 	const [isUploading, setIsUploading] = useState<boolean>(false);
-	const [categoryOptions, setCategoryOptions] = useState<ICategoryOptions[]>(
-		[]
-	);
+
 	const [selectedCategory, setSelectedCategory] =
 		useState<ICategoryOptions | null>(null);
 
@@ -87,23 +79,9 @@ export const UploadPage = (): JSX.Element => {
 		});
 	};
 
-	useEffect(() => {
-		const fetchCategoryOptions = async () => {
-			const categories = await axiosWrapper<Categories[]>({
-				url: "/categories",
-				method: "GET",
-			});
-			if (!categories.data) return;
-			const options: ICategoryOptions[] = categories.data.map((category) => {
-				return {
-					value: `${category.id}${category.code && `-${category.code}`}`,
-					label: category.name,
-				};
-			});
-			setCategoryOptions(options);
-		};
-		fetchCategoryOptions();
-	}, []);
+	const handleCategoryChange = (category: ICategoryOptions | null) => {
+		setSelectedCategory(category);
+	};
 
 	const handleFileChange = (file: File) => {
 		toast({
@@ -261,6 +239,71 @@ export const UploadPage = (): JSX.Element => {
 										: "Uploaded Successfully"}
 								</Text>
 							</Flex>
+							<Grid
+								templateColumns={{ base: "1fr", md: "2fr 1fr" }}
+								gap="0.5rem">
+								<GridItem as={FormControl}>
+									<Input
+										type="text"
+										placeholder={file?.name ?? "File Name"}
+										isReadOnly
+										isTruncated
+										colorScheme="purple"
+									/>
+								</GridItem>
+								<GridItem as={FormControl}>
+									<Select
+										isReadOnly
+										placeholder={user?.name ?? "User"}
+										icon={<AvatarIcon user={user} />}
+										colorScheme="purple"
+									/>
+								</GridItem>
+							</Grid>
+							<FormControl
+								isInvalid={isNameEmpty && isInputErrorEnabled}
+								isRequired>
+								<FormLabel>Name:</FormLabel>
+								<Input
+									type="text"
+									placeholder="Name"
+									name="name"
+									required
+									colorScheme="purple"
+									onChange={handleFormChange}
+									value={formData.name}
+								/>
+								<FormErrorMessage>Name should not be empty</FormErrorMessage>
+							</FormControl>
+							<Flex gap="0.25rem" direction={{ base: "column", md: "row" }}>
+								<FormCategoriesSelect
+									isInputErrorEnabled={isInputErrorEnabled}
+									onCategoryChange={handleCategoryChange}
+									selectedCategory={selectedCategory}
+								/>
+								<FormControl maxW={{ base: "100%", md: "100px" }}>
+									<FormLabel>Phase:</FormLabel>
+									<Input
+										type="text"
+										placeholder="Phase"
+										colorScheme="purple"
+										name="phase"
+										onChange={handleFormChange}
+										value={formData.phase}
+									/>
+								</FormControl>
+								<FormControl maxW={{ base: "100%", md: "100px" }}>
+									<FormLabel>Unit:</FormLabel>
+									<Input
+										type="text"
+										placeholder="Unit"
+										colorScheme="purple"
+										name="unit"
+										onChange={handleFormChange}
+										value={formData.unit}
+									/>
+								</FormControl>
+							</Flex>
 						</FileUploader>
 
 						<Button
@@ -279,9 +322,4 @@ export const UploadPage = (): JSX.Element => {
 			</VStack>
 		</>
 	);
-};
-
-const AvatarIcon = ({ user }: { user: User | undefined }): JSX.Element => {
-	if (!user) return <RxAvatar />;
-	return <Avatar size="xs" src={user?.picture} name={user.name ?? "User"} />;
 };

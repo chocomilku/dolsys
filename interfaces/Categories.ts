@@ -6,3 +6,8 @@ export interface Categories {
 }
 
 export type CategoriesWithoutID = Omit<Categories, "id">;
+
+export interface ICategoryOptions {
+	value: string;
+	label: string;
+}
