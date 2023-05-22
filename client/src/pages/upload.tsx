@@ -4,12 +4,9 @@ import {
 	Flex,
 	FormControl,
 	Grid,
-	GridItem,
 	Heading,
 	Input,
-	Select,
 	VStack,
-	Text,
 	Icon,
 	Alert,
 	AlertDescription,
@@ -27,10 +24,11 @@ import { FormEvent, useMemo, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { RxCopy } from "react-icons/rx";
 import { uploadFile } from "../controllers/uploadFile";
-import { AvatarIcon } from "../components/AvatarIcon";
 import { ICategoryOptions } from "../../../interfaces/Categories";
 import { FormCategoriesSelect } from "../components/form/FormCategoriesSelect";
 import { FileUploadArea } from "../components/form/FileUploadArea";
+import { FileName } from "../components/form/FileName";
+import { FileUser } from "../components/form/FileUser";
 
 export const UploadPage = (): JSX.Element => {
 	const [file, setFile] = useState<File>();
@@ -214,23 +212,8 @@ export const UploadPage = (): JSX.Element => {
 					<Flex direction={"column"} w={{ base: "100%", md: "xl" }} gap="1rem">
 						<FileUploadArea file={file} handleFileChange={handleFileChange} />
 						<Grid templateColumns={{ base: "1fr", md: "2fr 1fr" }} gap="0.5rem">
-							<GridItem as={FormControl}>
-								<Input
-									type="text"
-									placeholder={file?.name ?? "File Name"}
-									isReadOnly
-									isTruncated
-									colorScheme="purple"
-								/>
-							</GridItem>
-							<GridItem as={FormControl}>
-								<Select
-									isReadOnly
-									placeholder={user?.name ?? "User"}
-									icon={<AvatarIcon user={user} />}
-									colorScheme="purple"
-								/>
-							</GridItem>
+							<FileName fileName={file?.name} />
+							<FileUser name={user?.name} picture={user?.picture} />
 						</Grid>
 						<FormControl
 							isInvalid={isNameEmpty && isInputErrorEnabled}

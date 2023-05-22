@@ -1,9 +1,9 @@
-import { type User } from "@auth0/auth0-react";
 import { Avatar, ResponsiveValue } from "@chakra-ui/react";
 import { RxAvatar } from "react-icons/rx";
 
 interface AvatarIconProps {
-	user: User | undefined;
+	picture?: string;
+	name?: string;
 	size?: ResponsiveValue<
 		| (string & object)
 		| "xs"
@@ -18,12 +18,12 @@ interface AvatarIconProps {
 }
 
 export const AvatarIcon = (props: AvatarIconProps): JSX.Element => {
-	if (!props.user) return <RxAvatar />;
+	if (!props.picture && !props.name) return <RxAvatar />;
 	return (
 		<Avatar
 			size={props.size ?? "xs"}
-			src={props.user?.picture}
-			name={props.user.name ?? "User"}
+			src={props.picture}
+			name={props.name ?? "User"}
 		/>
 	);
 };
