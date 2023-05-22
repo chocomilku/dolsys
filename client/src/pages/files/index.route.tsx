@@ -36,7 +36,6 @@ import {
 } from "@tanstack/react-table";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { BaseFormModal } from "../../components/modal/BaseFormModal";
-import { UpdateFormModal } from "../../components/modal/UpdateFormModal";
 
 const LIMIT = 10;
 
@@ -270,7 +269,13 @@ export const FilesIndexPage = (): JSX.Element => {
 				</HStack>
 			</VStack>
 			<Portal>
-				<UpdateFormModal isOpen={isModalOpen} onClose={onModalClose} />
+				<BaseFormModal
+					isOpen={isModalOpen}
+					onClose={onModalClose}
+					formData={{
+						header: "Edit File",
+					}}
+				/>
 			</Portal>
 		</>
 	);

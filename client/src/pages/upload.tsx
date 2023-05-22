@@ -24,14 +24,13 @@ import {
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { FormEvent, useMemo, useState } from "react";
-import { FileUploader } from "react-drag-drop-files";
 import { useAuth0 } from "@auth0/auth0-react";
 import { RxCopy } from "react-icons/rx";
-import { BsCheckSquare, BsCloudUpload } from "react-icons/bs";
 import { uploadFile } from "../controllers/uploadFile";
 import { AvatarIcon } from "../components/AvatarIcon";
 import { ICategoryOptions } from "../../../interfaces/Categories";
 import { FormCategoriesSelect } from "../components/form/FormCategoriesSelect";
+import { FileUploadArea } from "../components/form/FileUploadArea";
 
 export const UploadPage = (): JSX.Element => {
 	const [file, setFile] = useState<File>();
@@ -213,98 +212,70 @@ export const UploadPage = (): JSX.Element => {
 
 				<form onSubmit={handleFileUpload}>
 					<Flex direction={"column"} w={{ base: "100%", md: "xl" }} gap="1rem">
-						<FileUploader
-							handleChange={handleFileChange}
-							name="file"
-							multiple={false}
-							required={true}>
-							<Flex
-								w="full"
-								borderColor={"purple.500"}
-								borderStyle={"dashed"}
-								borderWidth={"3px"}
-								p={16}
-								alignItems={"center"}
-								justifyContent={"center"}
-								flexDirection={"column"}
-								cursor={"pointer"}
-								gap="1rem">
-								<Icon
-									boxSize={"5em"}
-									as={!file ? BsCloudUpload : BsCheckSquare}
-								/>
-								<Text fontSize={"xl"}>
-									{!file
-										? "Drop your file or click here"
-										: "Uploaded Successfully"}
-								</Text>
-							</Flex>
-							<Grid
-								templateColumns={{ base: "1fr", md: "2fr 1fr" }}
-								gap="0.5rem">
-								<GridItem as={FormControl}>
-									<Input
-										type="text"
-										placeholder={file?.name ?? "File Name"}
-										isReadOnly
-										isTruncated
-										colorScheme="purple"
-									/>
-								</GridItem>
-								<GridItem as={FormControl}>
-									<Select
-										isReadOnly
-										placeholder={user?.name ?? "User"}
-										icon={<AvatarIcon user={user} />}
-										colorScheme="purple"
-									/>
-								</GridItem>
-							</Grid>
-							<FormControl
-								isInvalid={isNameEmpty && isInputErrorEnabled}
-								isRequired>
-								<FormLabel>Name:</FormLabel>
+						<FileUploadArea file={file} handleFileChange={handleFileChange} />
+						<Grid templateColumns={{ base: "1fr", md: "2fr 1fr" }} gap="0.5rem">
+							<GridItem as={FormControl}>
 								<Input
 									type="text"
-									placeholder="Name"
-									name="name"
-									required
+									placeholder={file?.name ?? "File Name"}
+									isReadOnly
+									isTruncated
 									colorScheme="purple"
+								/>
+							</GridItem>
+							<GridItem as={FormControl}>
+								<Select
+									isReadOnly
+									placeholder={user?.name ?? "User"}
+									icon={<AvatarIcon user={user} />}
+									colorScheme="purple"
+								/>
+							</GridItem>
+						</Grid>
+						<FormControl
+							isInvalid={isNameEmpty && isInputErrorEnabled}
+							isRequired>
+							<FormLabel>Name:</FormLabel>
+							<Input
+								type="text"
+								placeholder="Name"
+								name="name"
+								required
+								colorScheme="purple"
+								onChange={handleFormChange}
+								value={formData.name}
+							/>
+							<FormErrorMessage>Name should not be empty</FormErrorMessage>
+						</FormControl>
+						<Flex gap="0.25rem" direction={{ base: "column", md: "row" }}>
+							<FormCategoriesSelect
+								isInputErrorEnabled={isInputErrorEnabled}
+								onCategoryChange={handleCategoryChange}
+								selectedCategory={selectedCategory}
+							/>
+							<FormControl maxW={{ base: "100%", md: "100px" }}>
+								<FormLabel>Phase:</FormLabel>
+								<Input
+									type="text"
+									placeholder="Phase"
+									colorScheme="purple"
+									name="phase"
 									onChange={handleFormChange}
-									value={formData.name}
+									value={formData.phase}
 								/>
-								<FormErrorMessage>Name should not be empty</FormErrorMessage>
 							</FormControl>
-							<Flex gap="0.25rem" direction={{ base: "column", md: "row" }}>
-								<FormCategoriesSelect
-									isInputErrorEnabled={isInputErrorEnabled}
-									onCategoryChange={handleCategoryChange}
-									selectedCategory={selectedCategory}
+							<FormControl maxW={{ base: "100%", md: "100px" }}>
+								<FormLabel>Unit:</FormLabel>
+								<Input
+									type="text"
+									placeholder="Unit"
+									colorScheme="purple"
+									name="unit"
+									onChange={handleFormChange}
+									value={formData.unit}
 								/>
-								<FormControl maxW={{ base: "100%", md: "100px" }}>
-									<FormLabel>Phase:</FormLabel>
-									<Input
-										type="text"
-										placeholder="Phase"
-										colorScheme="purple"
-										name="phase"
-										onChange={handleFormChange}
-										value={formData.phase}
-									/>
-								</FormControl>
-								<FormControl maxW={{ base: "100%", md: "100px" }}>
-									<FormLabel>Unit:</FormLabel>
-									<Input
-										type="text"
-										placeholder="Unit"
-										colorScheme="purple"
-										name="unit"
-										onChange={handleFormChange}
-										value={formData.unit}
-									/>
-								</FormControl>
-							</Flex>
-						</FileUploader>
+							</FormControl>
+						</Flex>
 
 						<Button
 							type="submit"
