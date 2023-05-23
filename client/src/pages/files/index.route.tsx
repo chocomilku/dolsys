@@ -25,7 +25,7 @@ import {
 } from "react-icons/hi";
 import { FilesWithCategoriesWithoutPathAndUserID } from "../../../../interfaces/FileMetadata";
 import { PaginationDetails } from "../../../../interfaces/Pagination";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { axiosWrapperWithAuthToken } from "../../controllers/axios/axiosWrapperWithAuthToken";
 import { useAuth0 } from "@auth0/auth0-react";
 import {
@@ -35,7 +35,7 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
-import { BaseFormModal } from "../../components/modal/BaseFormModal";
+import { EditFileModal } from "../../components/modal/EditFileModal";
 
 const LIMIT = 10;
 
@@ -45,6 +45,15 @@ export const FilesIndexPage = (): JSX.Element => {
 	>([]);
 	const [pagination, setPagination] = useState<PaginationDetails>();
 	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [toEditSelectedFileCellId, setToEditSelectedFileCellId] =
+		useState<number>(0);
+
+	const editSelectedFile = useMemo(() => {
+		if (!toEditSelectedFileCellId) return;
+
+		return filesList[toEditSelectedFileCellId];
+	}, [filesList, toEditSelectedFileCellId]);
+
 	const { getAccessTokenSilently } = useAuth0();
 	const {
 		isOpen: isModalOpen,
@@ -54,11 +63,9 @@ export const FilesIndexPage = (): JSX.Element => {
 	const toast = useToast();
 
 	const editFile = (cell_id: number) => {
-		// real function later
-		// use modals
+		setToEditSelectedFileCellId(cell_id);
+
 		onModalOpen();
-		const toBeEditedFile = filesList[cell_id];
-		console.log(toBeEditedFile);
 	};
 
 	const deleteFile = async (cell_id: number) => {
@@ -269,12 +276,10 @@ export const FilesIndexPage = (): JSX.Element => {
 				</HStack>
 			</VStack>
 			<Portal>
-				<BaseFormModal
+				<EditFileModal
 					isOpen={isModalOpen}
 					onClose={onModalClose}
-					formData={{
-						header: "Edit File",
-					}}
+					file={editSelectedFile}
 				/>
 			</Portal>
 		</>
