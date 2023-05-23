@@ -4,7 +4,7 @@ interface FileButtonProps {
 	isUploading: boolean;
 }
 
-export const FileButton = ({ isUploading }: FileButtonProps) => {
+export const FileUploadButton = ({ isUploading }: FileButtonProps) => {
 	return (
 		<Button
 			type="submit"

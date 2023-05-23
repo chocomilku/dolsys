@@ -57,7 +57,6 @@ export const FormCategoriesSelect = (props: FormCategoriesSelectProps) => {
 			const options = categories.data.map((category) => {
 				return new Category(
 					category.id,
-
 					category.name,
 					category.code,
 					category.scope_level

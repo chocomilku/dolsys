@@ -1,11 +1,8 @@
 import {
-	Button,
 	Container,
 	Flex,
-	FormControl,
 	Grid,
 	Heading,
-	Input,
 	VStack,
 	Icon,
 	Alert,
@@ -16,8 +13,6 @@ import {
 	useClipboard,
 	useToast,
 	Code,
-	FormErrorMessage,
-	FormLabel,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { FormEvent, useMemo, useState } from "react";
@@ -29,6 +24,8 @@ import { FormCategoriesSelect } from "../components/form/FormCategoriesSelect";
 import { FileUploadArea } from "../components/form/FileUploadArea";
 import { FileName } from "../components/form/FileName";
 import { FileUser } from "../components/form/FileUser";
+import { FileUploadButton } from "../components/form/FileUploadButton";
+import { FileDetail } from "../components/form/FileDetail";
 
 export const UploadPage = (): JSX.Element => {
 	const [file, setFile] = useState<File>();
@@ -94,7 +91,7 @@ export const UploadPage = (): JSX.Element => {
 
 	const handleFormChange = (event: FormEvent<HTMLInputElement>) => {
 		const { name, value } = event.currentTarget;
-		setFormData({ ...formData, [name]: value });
+		setFormData({ ...formData, [name]: value.trim() });
 	};
 
 	const handleCopy = () => {
@@ -215,62 +212,33 @@ export const UploadPage = (): JSX.Element => {
 							<FileName fileName={file?.name} />
 							<FileUser name={user?.name} picture={user?.picture} />
 						</Grid>
-						<FormControl
-							isInvalid={isNameEmpty && isInputErrorEnabled}
-							isRequired>
-							<FormLabel>Name:</FormLabel>
-							<Input
-								type="text"
-								placeholder="Name"
-								name="name"
-								required
-								colorScheme="purple"
-								onChange={handleFormChange}
-								value={formData.name}
-							/>
-							<FormErrorMessage>Name should not be empty</FormErrorMessage>
-						</FormControl>
+						<FileDetail
+							label="name"
+							onChange={handleFormChange}
+							value={formData.name}
+							isRequired
+							isValueInvalid={isNameEmpty && isInputErrorEnabled}
+						/>
 						<Flex gap="0.25rem" direction={{ base: "column", md: "row" }}>
 							<FormCategoriesSelect
 								isInputErrorEnabled={isInputErrorEnabled}
 								onCategoryChange={handleCategoryChange}
 								selectedCategory={selectedCategory}
 							/>
-							<FormControl maxW={{ base: "100%", md: "100px" }}>
-								<FormLabel>Phase:</FormLabel>
-								<Input
-									type="text"
-									placeholder="Phase"
-									colorScheme="purple"
-									name="phase"
-									onChange={handleFormChange}
-									value={formData.phase}
-								/>
-							</FormControl>
-							<FormControl maxW={{ base: "100%", md: "100px" }}>
-								<FormLabel>Unit:</FormLabel>
-								<Input
-									type="text"
-									placeholder="Unit"
-									colorScheme="purple"
-									name="unit"
-									onChange={handleFormChange}
-									value={formData.unit}
-								/>
-							</FormControl>
+							<FileDetail
+								label="phase"
+								onChange={handleFormChange}
+								value={formData.phase}
+								maxW={{ base: "100%", md: "100px" }}
+							/>
+							<FileDetail
+								label="unit"
+								onChange={handleFormChange}
+								value={formData.unit}
+								maxW={{ base: "100%", md: "100px" }}
+							/>
 						</Flex>
-
-						<Button
-							type="submit"
-							variant={"solid"}
-							colorScheme="purple"
-							size={"lg"}
-							w={{ base: "100%", md: "md" }}
-							alignSelf={"center"}
-							isLoading={isUploading}
-							loadingText="Uploading">
-							Upload
-						</Button>
+						<FileUploadButton isUploading={isUploading} />
 					</Flex>
 				</form>
 			</VStack>
