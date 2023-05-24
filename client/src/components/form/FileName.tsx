@@ -1,4 +1,4 @@
-import { GridItem, FormControl, Input } from "@chakra-ui/react";
+import { GridItem, FormControl, Input, FormLabel } from "@chakra-ui/react";
 
 interface FileNameProps {
 	fileName?: string;
@@ -7,6 +7,7 @@ interface FileNameProps {
 export const FileName = (props: FileNameProps) => {
 	return (
 		<GridItem as={FormControl}>
+			<FormLabel>File Name:</FormLabel>
 			<Input
 				type="text"
 				placeholder={props.fileName ?? "File Name"}

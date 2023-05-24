@@ -15,7 +15,6 @@ import {
 	useToast,
 	Code,
 	useDisclosure,
-	Portal,
 } from "@chakra-ui/react";
 import {
 	HiChevronLeft,
@@ -25,7 +24,7 @@ import {
 } from "react-icons/hi";
 import { FilesWithCategoriesWithoutPathAndUserID } from "../../../../interfaces/FileMetadata";
 import { PaginationDetails } from "../../../../interfaces/Pagination";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { axiosWrapperWithAuthToken } from "../../controllers/axios/axiosWrapperWithAuthToken";
 import { useAuth0 } from "@auth0/auth0-react";
 import {
@@ -45,14 +44,9 @@ export const FilesIndexPage = (): JSX.Element => {
 	>([]);
 	const [pagination, setPagination] = useState<PaginationDetails>();
 	const [currentPage, setCurrentPage] = useState<number>(1);
-	const [toEditSelectedFileCellId, setToEditSelectedFileCellId] =
-		useState<number>(0);
-
-	const editSelectedFile = useMemo(() => {
-		if (!toEditSelectedFileCellId) return;
-
-		return filesList[toEditSelectedFileCellId];
-	}, [filesList, toEditSelectedFileCellId]);
+	const [selectedFileEdit, setSelectedFileEdit] = useState<
+		FilesWithCategoriesWithoutPathAndUserID | undefined
+	>();
 
 	const { getAccessTokenSilently } = useAuth0();
 	const {
@@ -62,10 +56,14 @@ export const FilesIndexPage = (): JSX.Element => {
 	} = useDisclosure();
 	const toast = useToast();
 
-	const editFile = (cell_id: number) => {
-		setToEditSelectedFileCellId(cell_id);
-
+	const editModalOnOpen = (cell_id: number) => {
+		setSelectedFileEdit(filesList[cell_id]);
 		onModalOpen();
+	};
+
+	const editModalOnClose = () => {
+		onModalClose();
+		setSelectedFileEdit(undefined);
 	};
 
 	const deleteFile = async (cell_id: number) => {
@@ -161,7 +159,7 @@ export const FilesIndexPage = (): JSX.Element => {
 								variant="solid"
 								colorScheme="blue"
 								icon={<AiFillEdit />}
-								onClick={() => editFile(props.row.index)}
+								onClick={() => editModalOnOpen(props.row.index)}
 							/>
 							<IconButton
 								aria-label="Delete File"
@@ -275,13 +273,11 @@ export const FilesIndexPage = (): JSX.Element => {
 					/>
 				</HStack>
 			</VStack>
-			<Portal>
-				<EditFileModal
-					isOpen={isModalOpen}
-					onClose={onModalClose}
-					file={editSelectedFile}
-				/>
-			</Portal>
+			<EditFileModal
+				isOpen={isModalOpen}
+				onClose={editModalOnClose}
+				file={selectedFileEdit}
+			/>
 		</>
 	);
 };

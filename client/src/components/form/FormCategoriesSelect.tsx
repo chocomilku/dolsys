@@ -98,7 +98,7 @@ export const FormCategoriesSelect = (props: FormCategoriesSelectProps) => {
 			w={"full"}
 			isRequired
 			isInvalid={isCategoryEmpty && props.isInputErrorEnabled}>
-			<FormLabel>Category</FormLabel>
+			<FormLabel>Category:</FormLabel>
 			<ReactSelect
 				onChange={(value) => props.onCategoryChange(value)}
 				options={categoryOptionsSelection}

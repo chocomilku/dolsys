@@ -8,6 +8,7 @@ import {
 	ModalFooter,
 	Button,
 	Flex,
+	ThemingProps,
 } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
@@ -22,6 +23,7 @@ interface BaseFormModalProps {
 			submitAction?: React.MouseEventHandler<HTMLButtonElement>;
 		};
 	};
+	size?: ThemingProps<"Modal">["size"];
 }
 
 export const BaseFormModal = (props: BaseFormModalProps) => {
@@ -33,7 +35,7 @@ export const BaseFormModal = (props: BaseFormModalProps) => {
 	};
 
 	return (
-		<Modal isOpen={props.isOpen} onClose={props.onClose}>
+		<Modal isOpen={props.isOpen} onClose={props.onClose} size={props.size}>
 			<ModalOverlay />
 			<ModalContent>
 				<ModalHeader>{props.formData.header}</ModalHeader>
