@@ -12,7 +12,7 @@ import { FileName } from "../form/FileName";
 import { FileDetail } from "../form/FileDetail";
 import { FormCategoriesSelect } from "../form/FormCategoriesSelect";
 import { FormEvent, useEffect, useState } from "react";
-import { ICategoryOptions } from "../../../../interfaces/Categories";
+import { Category } from "../../../../interfaces/Categories";
 
 interface EditFileModalProps {
 	isOpen: boolean;
@@ -48,10 +48,11 @@ export const EditFileModal = (props: EditFileModalProps) => {
 		});
 	}, [props.file]);
 
-	const [selectedCategory, setSelectedCategory] =
-		useState<ICategoryOptions | null>(null);
+	const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+		null
+	);
 
-	const handleCategoryChange = (category: ICategoryOptions | null) => {
+	const handleCategoryChange = (category: Category | null) => {
 		setSelectedCategory(category);
 	};
 

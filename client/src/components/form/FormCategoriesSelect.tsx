@@ -1,51 +1,21 @@
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react";
 import { Select as ReactSelect } from "chakra-react-select";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Categories } from "../../../../interfaces/Categories";
 import { axiosWrapper } from "../../controllers/axios/axiosWrapper";
-import { ICategoryOptions } from "../../../../interfaces/Categories";
+import { Category } from "../../../../interfaces/Categories";
 
 interface FormCategoriesSelectProps {
 	isInputErrorEnabled: boolean;
 	preSelectedCategoryId?: Categories["id"];
-	selectedCategory: ICategoryOptions | null;
-	onCategoryChange: (category: ICategoryOptions | null) => void;
-}
-
-class Category {
-	readonly id: number;
-	name: string;
-	code?: string;
-	scope_level?: string;
-	constructor(id: number, name: string, code?: string, scope_level?: string) {
-		this.id = id;
-		this.name = name;
-		this.code = code;
-		this.scope_level = scope_level;
-	}
-
-	public value = () => {
-		return `${this.id}${this.code && `-${this.code}`}`;
-	};
-
-	public label = () => {
-		return `${this.name} ${this.scope_level && `${this.scope_level}`}`;
-	};
+	selectedCategory: Category | null;
+	onCategoryChange: (category: Category | null) => void;
 }
 
 export const FormCategoriesSelect = (props: FormCategoriesSelectProps) => {
 	const [categoryOptions, setCategoryOptions] = useState<Category[]>([]);
 
 	const isCategoryEmpty = props.selectedCategory === null;
-
-	const categoryOptionsSelection = useMemo(() => {
-		return categoryOptions.map((category) => {
-			return {
-				label: category.label(),
-				value: category.value(),
-			};
-		});
-	}, [categoryOptions]);
 
 	useEffect(() => {
 		const fetchCategoryOptions = async () => {
@@ -77,10 +47,7 @@ export const FormCategoriesSelect = (props: FormCategoriesSelectProps) => {
 
 			if (!preSelectedCategory) return;
 
-			props.onCategoryChange({
-				label: preSelectedCategory.label(),
-				value: preSelectedCategory.value(),
-			});
+			props.onCategoryChange(preSelectedCategory);
 		}
 	}, [
 		props.preSelectedCategoryId,
@@ -99,12 +66,27 @@ export const FormCategoriesSelect = (props: FormCategoriesSelectProps) => {
 			isRequired
 			isInvalid={isCategoryEmpty && props.isInputErrorEnabled}>
 			<FormLabel>Category:</FormLabel>
-			<ReactSelect
-				onChange={(value) => props.onCategoryChange(value)}
-				options={categoryOptionsSelection}
+			<ReactSelect<{ value: string; label: string }>
+				options={categoryOptions.map((category) => {
+					return {
+						label: category.label(),
+						value: category.value(),
+					};
+				})}
 				colorScheme="purple"
 				required
-				value={props.selectedCategory}
+				value={{
+					value: props.selectedCategory?.value() ?? "",
+					label: props.selectedCategory?.label() ?? "",
+				}}
+				onChange={(selectedOption) => {
+					if (!selectedOption) return;
+					const selectedCategory = categoryOptions.find(
+						(category) => category.value() === selectedOption.value
+					);
+					if (!selectedCategory) return;
+					props.onCategoryChange(selectedCategory);
+				}}
 			/>
 			<FormErrorMessage>Category should not be empty</FormErrorMessage>
 		</FormControl>

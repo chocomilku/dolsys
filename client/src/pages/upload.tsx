@@ -19,7 +19,7 @@ import { FormEvent, useMemo, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { RxCopy } from "react-icons/rx";
 import { uploadFile } from "../controllers/uploadFile";
-import { ICategoryOptions } from "../../../interfaces/Categories";
+import { Category } from "../../../interfaces/Categories";
 import { FormCategoriesSelect } from "../components/form/FormCategoriesSelect";
 import { FileUploadArea } from "../components/form/FileUploadArea";
 import { FileName } from "../components/form/FileName";
@@ -38,8 +38,9 @@ export const UploadPage = (): JSX.Element => {
 	const [fileLink, setFileLink] = useState<string | null>(null);
 	const [isUploading, setIsUploading] = useState<boolean>(false);
 
-	const [selectedCategory, setSelectedCategory] =
-		useState<ICategoryOptions | null>(null);
+	const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+		null
+	);
 
 	const fileLinkUrl = useMemo(() => {
 		if (!fileLink) return window.location.origin;
@@ -49,7 +50,7 @@ export const UploadPage = (): JSX.Element => {
 	const parsedSelectedCategoryId = useMemo(() => {
 		if (!selectedCategory) return;
 
-		const parsedId = parseInt(selectedCategory?.value.split("-")[0]);
+		const parsedId = selectedCategory.id;
 
 		if (isNaN(parsedId)) return;
 
@@ -73,7 +74,7 @@ export const UploadPage = (): JSX.Element => {
 		});
 	};
 
-	const handleCategoryChange = (category: ICategoryOptions | null) => {
+	const handleCategoryChange = (category: Category | null) => {
 		setSelectedCategory(category);
 	};
 
