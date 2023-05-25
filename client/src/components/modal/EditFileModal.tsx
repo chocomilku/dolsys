@@ -5,6 +5,7 @@ import {
 	Grid,
 	GridItem,
 	Input,
+	useToast,
 } from "@chakra-ui/react";
 import { FilesWithCategoriesWithoutPathAndUserID } from "../../../../interfaces/FileMetadata";
 import { BaseFormModal } from "./BaseFormModal";
@@ -13,6 +14,8 @@ import { FileDetail } from "../form/FileDetail";
 import { FormCategoriesSelect } from "../form/FormCategoriesSelect";
 import { FormEvent, useEffect, useState } from "react";
 import { Category } from "../../../../interfaces/Categories";
+import { useAuth0 } from "@auth0/auth0-react";
+import { editFile } from "../../controllers/axios/editFile";
 
 interface EditFileModalProps {
 	isOpen: boolean;
@@ -21,11 +24,12 @@ interface EditFileModalProps {
 }
 
 export const EditFileModal = (props: EditFileModalProps) => {
+	const { getAccessTokenSilently } = useAuth0();
+	const toast = useToast();
 	const [fileMetadata, setFileMetadata] = useState<
 		FilesWithCategoriesWithoutPathAndUserID | undefined
 	>();
 
-	// REFACTOR: This should be changed on `fileMetadata` state, not a separate state
 	const [formData, setFormData] = useState({
 		name: "",
 		phase: "",
@@ -42,7 +46,7 @@ export const EditFileModal = (props: EditFileModalProps) => {
 		if (!props.file) return setFormData({ name: "", phase: "", unit: "" });
 
 		return setFormData({
-			name: props.file.name ?? "",
+			name: props.file.title ?? "",
 			phase: props.file.phase_no ?? "",
 			unit: props.file.unit_no ?? "",
 		});
@@ -59,6 +63,32 @@ export const EditFileModal = (props: EditFileModalProps) => {
 	const handleFormChange = (event: FormEvent<HTMLInputElement>) => {
 		const { name, value } = event.currentTarget;
 		setFormData({ ...formData, [name]: value.trim() });
+	};
+
+	const submitEdits = async () => {
+		if (!fileMetadata) return;
+		if (!selectedCategory) return;
+		const response = await editFile(
+			await getAccessTokenSilently(),
+			fileMetadata.uid,
+			{
+				originalname: formData.name,
+				phase_no: formData.phase,
+				unit_no: formData.unit,
+				category_id: selectedCategory?.id,
+			}
+		);
+		if (!response) return;
+
+		toast({
+			title: "File Updated!",
+			description: "File metadata has been updated.",
+			status: "success",
+			duration: 10000,
+			isClosable: true,
+			position: "top-right",
+		});
+		props.onClose();
 	};
 
 	return (
@@ -84,7 +114,7 @@ export const EditFileModal = (props: EditFileModalProps) => {
 						formData={{
 							header: "Edit File Metadata",
 							submitText: "Save",
-							submitAction: () => console.log("hi"),
+							submitAction: () => submitEdits(),
 						}}>
 						<Grid templateColumns={{ base: "1fr", md: "1fr 8fr" }} gap="0.5rem">
 							<GridItem as={FormControl}>
