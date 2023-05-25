@@ -13,7 +13,7 @@ interface FormCategoriesSelectProps {
 }
 
 class Category {
-	id: number;
+	readonly id: number;
 	name: string;
 	code?: string;
 	scope_level?: string;

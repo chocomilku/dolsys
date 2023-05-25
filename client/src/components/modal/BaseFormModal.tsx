@@ -18,19 +18,17 @@ interface BaseFormModalProps {
 	onClose: () => void;
 	formData: {
 		header: string;
-		submit?: {
-			submitText?: string;
-			submitAction?: React.MouseEventHandler<HTMLButtonElement>;
-		};
+		submitText?: string;
+		submitAction?: React.MouseEventHandler<HTMLButtonElement>;
 	};
 	size?: ThemingProps<"Modal">["size"];
 }
 
 export const BaseFormModal = (props: BaseFormModalProps) => {
 	const closeOnClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
-		if (props.formData.submit && props.formData.submit.submitAction) {
-			props.formData.submit.submitAction(event);
-		}
+		if (!props.formData.submitAction) return;
+
+		props.formData.submitAction(event);
 		props.onClose();
 	};
 
@@ -44,9 +42,9 @@ export const BaseFormModal = (props: BaseFormModalProps) => {
 				<ModalBody>{props.children}</ModalBody>
 
 				<ModalFooter as={Flex} flexDirection="row" gap="0.5rem">
-					{props.formData.submit && (
+					{props.formData.submitAction && (
 						<Button colorScheme="green" onClick={closeOnClick}>
-							{props.formData.submit.submitText ?? "Save"}
+							{props.formData.submitText ?? "Save"}
 						</Button>
 					)}
 					<Button colorScheme="blackAlpha" onClick={props.onClose}>

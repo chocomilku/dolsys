@@ -21,8 +21,6 @@ interface EditFileModalProps {
 }
 
 export const EditFileModal = (props: EditFileModalProps) => {
-	console.log(props.file);
-
 	const [fileMetadata, setFileMetadata] = useState<
 		FilesWithCategoriesWithoutPathAndUserID | undefined
 	>();
@@ -52,6 +50,7 @@ export const EditFileModal = (props: EditFileModalProps) => {
 
 	const [selectedCategory, setSelectedCategory] =
 		useState<ICategoryOptions | null>(null);
+
 	const handleCategoryChange = (category: ICategoryOptions | null) => {
 		setSelectedCategory(category);
 	};
@@ -64,15 +63,12 @@ export const EditFileModal = (props: EditFileModalProps) => {
 	return (
 		<>
 			{!fileMetadata ? (
+				// Modal if data is not available
 				<BaseFormModal
 					isOpen={props.isOpen}
 					onClose={props.onClose}
 					formData={{
 						header: "Edit File Metadata",
-						submit: {
-							submitText: "Save",
-							submitAction: () => console.log(fileMetadata),
-						},
 					}}>
 					<Code colorScheme="red">
 						Error fetching file data. Please try again later.
@@ -86,8 +82,10 @@ export const EditFileModal = (props: EditFileModalProps) => {
 						size={"xl"}
 						formData={{
 							header: "Edit File Metadata",
+							submitText: "Save",
+							submitAction: () => console.log("hi"),
 						}}>
-						<Grid templateColumns={{ base: "1fr", md: "1fr 4fr" }} gap="0.5rem">
+						<Grid templateColumns={{ base: "1fr", md: "1fr 8fr" }} gap="0.5rem">
 							<GridItem as={FormControl}>
 								<FormLabel>ID:</FormLabel>
 								<Input
