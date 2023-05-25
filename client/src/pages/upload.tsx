@@ -1,16 +1,9 @@
 import {
-	Avatar,
-	Button,
 	Container,
 	Flex,
-	FormControl,
 	Grid,
-	GridItem,
 	Heading,
-	Input,
-	Select,
 	VStack,
-	Text,
 	Icon,
 	Alert,
 	AlertDescription,
@@ -20,24 +13,19 @@ import {
 	useClipboard,
 	useToast,
 	Code,
-	FormErrorMessage,
-	FormLabel,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
-import { Select as ReactSelect } from "chakra-react-select";
-import { FormEvent, useEffect, useMemo, useState } from "react";
-import { FileUploader } from "react-drag-drop-files";
-import { type User, useAuth0 } from "@auth0/auth0-react";
-import { RxAvatar, RxCopy } from "react-icons/rx";
-import { BsCheckSquare, BsCloudUpload } from "react-icons/bs";
+import { FormEvent, useMemo, useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import { RxCopy } from "react-icons/rx";
 import { uploadFile } from "../controllers/uploadFile";
-import { Categories } from "../../../interfaces/Categories";
-import { axiosWrapper } from "../controllers/axios/axiosWrapper";
-
-interface ICategoryOptions {
-	value: string;
-	label: string;
-}
+import { Category } from "../../../interfaces/Categories";
+import { FormCategoriesSelect } from "../components/form/FormCategoriesSelect";
+import { FileUploadArea } from "../components/form/FileUploadArea";
+import { FileName } from "../components/form/FileName";
+import { FileUser } from "../components/form/FileUser";
+import { FileUploadButton } from "../components/form/FileUploadButton";
+import { FileDetail } from "../components/form/FileDetail";
 
 export const UploadPage = (): JSX.Element => {
 	const [file, setFile] = useState<File>();
@@ -49,11 +37,10 @@ export const UploadPage = (): JSX.Element => {
 	const [isInputErrorEnabled, setInputErrorEnabled] = useState<boolean>(false);
 	const [fileLink, setFileLink] = useState<string | null>(null);
 	const [isUploading, setIsUploading] = useState<boolean>(false);
-	const [categoryOptions, setCategoryOptions] = useState<ICategoryOptions[]>(
-		[]
+
+	const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+		null
 	);
-	const [selectedCategory, setSelectedCategory] =
-		useState<ICategoryOptions | null>(null);
 
 	const fileLinkUrl = useMemo(() => {
 		if (!fileLink) return window.location.origin;
@@ -63,7 +50,7 @@ export const UploadPage = (): JSX.Element => {
 	const parsedSelectedCategoryId = useMemo(() => {
 		if (!selectedCategory) return;
 
-		const parsedId = parseInt(selectedCategory?.value.split("-")[0]);
+		const parsedId = selectedCategory.id;
 
 		if (isNaN(parsedId)) return;
 
@@ -87,23 +74,9 @@ export const UploadPage = (): JSX.Element => {
 		});
 	};
 
-	useEffect(() => {
-		const fetchCategoryOptions = async () => {
-			const categories = await axiosWrapper<Categories[]>({
-				url: "/categories",
-				method: "GET",
-			});
-			if (!categories.data) return;
-			const options: ICategoryOptions[] = categories.data.map((category) => {
-				return {
-					value: `${category.id}${category.code && `-${category.code}`}`,
-					label: category.name,
-				};
-			});
-			setCategoryOptions(options);
-		};
-		fetchCategoryOptions();
-	}, []);
+	const handleCategoryChange = (category: Category | null) => {
+		setSelectedCategory(category);
+	};
 
 	const handleFileChange = (file: File) => {
 		toast({
@@ -119,7 +92,7 @@ export const UploadPage = (): JSX.Element => {
 
 	const handleFormChange = (event: FormEvent<HTMLInputElement>) => {
 		const { name, value } = event.currentTarget;
-		setFormData({ ...formData, [name]: value });
+		setFormData({ ...formData, [name]: value.trim() });
 	};
 
 	const handleCopy = () => {
@@ -235,126 +208,41 @@ export const UploadPage = (): JSX.Element => {
 
 				<form onSubmit={handleFileUpload}>
 					<Flex direction={"column"} w={{ base: "100%", md: "xl" }} gap="1rem">
-						<FileUploader
-							handleChange={handleFileChange}
-							name="file"
-							multiple={false}
-							required={true}>
-							<Flex
-								w="full"
-								borderColor={"purple.500"}
-								borderStyle={"dashed"}
-								borderWidth={"3px"}
-								p={16}
-								alignItems={"center"}
-								justifyContent={"center"}
-								flexDirection={"column"}
-								cursor={"pointer"}
-								gap="1rem">
-								<Icon
-									boxSize={"5em"}
-									as={!file ? BsCloudUpload : BsCheckSquare}
-								/>
-								<Text fontSize={"xl"}>
-									{!file
-										? "Drop your file or click here"
-										: "Uploaded Successfully"}
-								</Text>
-							</Flex>
-						</FileUploader>
+						<FileUploadArea file={file} handleFileChange={handleFileChange} />
 						<Grid templateColumns={{ base: "1fr", md: "2fr 1fr" }} gap="0.5rem">
-							<GridItem as={FormControl}>
-								<Input
-									type="text"
-									placeholder={file?.name ?? "File Name"}
-									isReadOnly
-									isTruncated
-									colorScheme="purple"
-								/>
-							</GridItem>
-							<GridItem as={FormControl}>
-								<Select
-									isReadOnly
-									placeholder={user?.name ?? "User"}
-									icon={<AvatarIcon user={user} />}
-									colorScheme="purple"
-								/>
-							</GridItem>
+							<FileName fileName={file?.name} />
+							<FileUser name={user?.name} picture={user?.picture} />
 						</Grid>
-						<FormControl
-							isInvalid={isNameEmpty && isInputErrorEnabled}
-							isRequired>
-							<FormLabel>Name:</FormLabel>
-							<Input
-								type="text"
-								placeholder="Name"
-								name="name"
-								required
-								colorScheme="purple"
-								onChange={handleFormChange}
-								value={formData.name}
-							/>
-							<FormErrorMessage>Name should not be empty</FormErrorMessage>
-						</FormControl>
+						<FileDetail
+							label="name"
+							onChange={handleFormChange}
+							value={formData.name}
+							isRequired
+							isValueInvalid={isNameEmpty && isInputErrorEnabled}
+						/>
 						<Flex gap="0.25rem" direction={{ base: "column", md: "row" }}>
-							<FormControl
-								w={"full"}
-								isRequired
-								isInvalid={isCategoryEmpty && isInputErrorEnabled}>
-								<FormLabel>Category</FormLabel>
-								<ReactSelect
-									onChange={(value) => setSelectedCategory(value)}
-									options={categoryOptions}
-									colorScheme="purple"
-									required
-									value={selectedCategory}
-								/>
-								<FormErrorMessage>
-									Category should not be empty
-								</FormErrorMessage>
-							</FormControl>
-							<FormControl maxW={{ base: "100%", md: "100px" }}>
-								<FormLabel>Phase:</FormLabel>
-								<Input
-									type="text"
-									placeholder="Phase"
-									colorScheme="purple"
-									name="phase"
-									onChange={handleFormChange}
-									value={formData.phase}
-								/>
-							</FormControl>
-							<FormControl maxW={{ base: "100%", md: "100px" }}>
-								<FormLabel>Unit:</FormLabel>
-								<Input
-									type="text"
-									placeholder="Unit"
-									colorScheme="purple"
-									name="unit"
-									onChange={handleFormChange}
-									value={formData.unit}
-								/>
-							</FormControl>
+							<FormCategoriesSelect
+								isInputErrorEnabled={isInputErrorEnabled}
+								onCategoryChange={handleCategoryChange}
+								selectedCategory={selectedCategory}
+							/>
+							<FileDetail
+								label="phase"
+								onChange={handleFormChange}
+								value={formData.phase}
+								maxW={{ base: "100%", md: "100px" }}
+							/>
+							<FileDetail
+								label="unit"
+								onChange={handleFormChange}
+								value={formData.unit}
+								maxW={{ base: "100%", md: "100px" }}
+							/>
 						</Flex>
-						<Button
-							type="submit"
-							variant={"solid"}
-							colorScheme="purple"
-							size={"lg"}
-							w={{ base: "100%", md: "md" }}
-							alignSelf={"center"}
-							isLoading={isUploading}
-							loadingText="Uploading">
-							Upload
-						</Button>
+						<FileUploadButton isUploading={isUploading} />
 					</Flex>
 				</form>
 			</VStack>
 		</>
 	);
-};
-
-const AvatarIcon = ({ user }: { user: User | undefined }): JSX.Element => {
-	if (!user) return <RxAvatar />;
-	return <Avatar size="xs" src={user?.picture} name={user.name ?? "User"} />;
 };
