@@ -1,13 +1,13 @@
 import type {
-	FileMetadata,
 	FileMetadataWithID,
 } from "../../../interfaces/FileMetadata";
+import type { FileUploadWithoutFileAttributes } from "../../../interfaces/File";
 import { axiosWrapperWithAuthToken } from "./axios/axiosWrapperWithAuthToken";
 
 export const uploadFile = async (
 	access_token: string,
 	file: File,
-	metadata: Omit<FileMetadata, "uid" | "path" | "originalname">
+	metadata: FileUploadWithoutFileAttributes
 ) => {
 	const formData = new FormData();
 	formData.append("file", file);

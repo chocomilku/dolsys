@@ -49,9 +49,9 @@ export interface File {
 
     /**
      * The ID of the category of the file.
-     * @remarks This is the ID of the category of the file and it has an SQL data type of `int unsigned`
+     * @remarks This is the ID of the category of the file and it has an SQL data type of `int unsigned NOT NULL`
      */
-    category_id?: number;
+    category_id: number;
 
     /**
      * The title of the file.
@@ -114,3 +114,5 @@ export interface FileUpload extends Omit<File, "id" | "created_at" | "download_c
 export interface FileUploadWithUid extends FileUpload {
     uid: string;
 }
+
+export interface FileUploadWithoutFileAttributes extends Omit<FileUpload, "path" | "file_name"> {}
