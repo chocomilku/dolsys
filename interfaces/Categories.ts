@@ -12,6 +12,7 @@ export interface ICategoryOptions {
 	label: string;
 }
 
+// TODO: change this to `CategoryOption` and rename every of its instances to `CategoryOption`
 export class Category {
 	readonly id: number;
 	name: string;

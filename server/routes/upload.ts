@@ -11,7 +11,7 @@ import {
 	InternalServerError,
 } from "../middleware/errors/errors";
 import { getFileMetadata } from "../controller/getFileMetadata";
-import { FileMetadata } from "../../interfaces/FileMetadata";
+import { FileUpload } from "../../interfaces/File";
 
 const router: Router = Router();
 
@@ -22,7 +22,7 @@ router.post(
 	checkRequiredPermissions(["upload:files"]),
 	async (
 		req: TypedRequestBody<
-			Omit<Partial<FileMetadata>, "uid" | "path" | "originalname">
+			Partial<FileUpload>
 		>,
 		res: Response,
 		next: NextFunction
@@ -58,7 +58,7 @@ router.post(
 
 			const addedId = await addFileMetadata({
 				path: req.file.path,
-				originalname: req.file.originalname,
+				file_name: req.file.originalname,
 				user_id: checkedBody.user_id,
 				category_id: checkedBody.category_id,
 				phase_no: checkedBody.phase_no,

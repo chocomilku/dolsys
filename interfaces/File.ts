@@ -108,3 +108,9 @@ export interface FileWithCategory extends File {
 }
 
 export interface FileMetadata extends Omit<FileWithCategory, "path" | "user_id"> {}
+
+export interface FileUpload extends Omit<File, "id" | "created_at" | "download_count" | "uid"> {}
+
+export interface FileUploadWithUid extends FileUpload {
+    uid: string;
+}
