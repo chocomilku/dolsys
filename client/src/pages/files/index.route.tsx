@@ -22,7 +22,6 @@ import {
 	HiChevronRight,
 	HiChevronDoubleRight,
 } from "react-icons/hi";
-import { FilesWithCategoriesWithoutPathAndUserID } from "../../../../interfaces/FileMetadata";
 import { PaginationDetails } from "../../../../interfaces/Pagination";
 import { useEffect, useState } from "react";
 import { axiosWrapperWithAuthToken } from "../../controllers/axios/axiosWrapperWithAuthToken";
@@ -35,17 +34,18 @@ import {
 } from "@tanstack/react-table";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { EditFileModal } from "../../components/modal/EditFileModal";
+import { FileMetadata } from "../../../../interfaces/File";
 
 const LIMIT = 10;
 
 export const FilesIndexPage = (): JSX.Element => {
 	const [filesList, setFilesList] = useState<
-		FilesWithCategoriesWithoutPathAndUserID[]
+		FileMetadata[]
 	>([]);
 	const [pagination, setPagination] = useState<PaginationDetails>();
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [selectedFileEdit, setSelectedFileEdit] = useState<
-		FilesWithCategoriesWithoutPathAndUserID | undefined
+		FileMetadata | undefined
 	>();
 
 	const { getAccessTokenSilently } = useAuth0();
@@ -87,7 +87,7 @@ export const FilesIndexPage = (): JSX.Element => {
 			title: "File Deleted",
 			description: (
 				<p>
-					File <Code>{toBeDeletedFile.originalname}</Code> has been deleted.
+					File <Code>{toBeDeletedFile.file_name}</Code> has been deleted.
 				</p>
 			),
 			status: "success",
@@ -101,7 +101,7 @@ export const FilesIndexPage = (): JSX.Element => {
 			const access_token = await getAccessTokenSilently();
 
 			const response = await axiosWrapperWithAuthToken<{
-				files: FilesWithCategoriesWithoutPathAndUserID[];
+				files: FileMetadata[];
 				pagination: PaginationDetails;
 			}>(access_token, {
 				method: "GET",
@@ -124,9 +124,9 @@ export const FilesIndexPage = (): JSX.Element => {
 	}, [getAccessTokenSilently, currentPage]);
 
 	const columnHelper =
-		createColumnHelper<FilesWithCategoriesWithoutPathAndUserID>();
+		createColumnHelper<FileMetadata>();
 
-	type AddColumnKey = FilesWithCategoriesWithoutPathAndUserID & {
+	type AddColumnKey = FileMetadata & {
 		action: unknown;
 	};
 	type ColumnKeys = (keyof AddColumnKey)[];
@@ -134,17 +134,18 @@ export const FilesIndexPage = (): JSX.Element => {
 	const columnKeys: ColumnKeys = [
 		"action",
 		"id",
-		"originalname",
+		"file_name",
 		"created_at",
 		"uid",
-		"downloadCount",
-		"category_id",
-		"name",
-		"code",
-		"scope_level",
+		"download_count",
 		"title",
 		"phase_no",
 		"unit_no",
+		"category_id",
+		"category_name",
+		"category_code",
+		"category_scope_level",
+		"category_code"
 	];
 
 	const columns = columnKeys.map((key) => {
@@ -175,7 +176,7 @@ export const FilesIndexPage = (): JSX.Element => {
 		}
 
 		return columnHelper.accessor(
-			key as keyof FilesWithCategoriesWithoutPathAndUserID,
+			key as keyof FileMetadata,
 			{
 				header: key,
 				cell: (info) => info.getValue(),

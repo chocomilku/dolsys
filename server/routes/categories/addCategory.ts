@@ -3,9 +3,9 @@ import { z } from "zod";
 import { addCategoryToDB } from "../../controller/addCategoryToDB";
 import { TypedRequestBody } from "../../interfaces/typedExpress";
 import {
-	Categories,
-	CategoriesWithoutID,
-} from "../../../interfaces/Categories";
+	Category,
+	CategoryWithoutID,
+} from "../../../interfaces/Category";
 import { db } from "../../middleware/knex/credentials";
 import { authMiddleware } from "../../middleware/jwt-bearer/authOptions";
 import { checkRequiredPermissions } from "../../middleware/auth0/checkPermissions";
@@ -17,7 +17,7 @@ router.post(
 	authMiddleware,
 	checkRequiredPermissions(["create:category"]),
 	async (
-		req: TypedRequestBody<CategoriesWithoutID>,
+		req: TypedRequestBody<CategoryWithoutID>,
 		res: Response,
 		next: NextFunction
 	) => {
@@ -34,7 +34,7 @@ router.post(
 
 			const addedCategoryID = await addCategoryToDB(parsedCategory);
 
-			const addedCategory = await db<Categories>("categories").where({
+			const addedCategory = await db<Category>("categories").where({
 				id: addedCategoryID[0],
 			});
 

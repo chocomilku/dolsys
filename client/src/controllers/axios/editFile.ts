@@ -1,15 +1,11 @@
-import { FileMetadataWithID } from "../../../../interfaces/FileMetadata";
+import { FileEdit } from "../../../../interfaces/File";
 import { axiosWrapperWithAuthToken } from "./axiosWrapperWithAuthToken";
 
-type UpdateFileMetadata = Pick<
-	FileMetadataWithID,
-	"originalname" | "category_id" | "title" | "phase_no" | "unit_no"
->;
 
 export const editFile = async (
 	access_token: string,
 	uid: string,
-	updates: UpdateFileMetadata
+	updates: FileEdit
 ) => {
 	try {
 		const updateFile = await axiosWrapperWithAuthToken<Record<string, never>>(

@@ -7,27 +7,27 @@ import {
 	Input,
 	useToast,
 } from "@chakra-ui/react";
-import { FilesWithCategoriesWithoutPathAndUserID } from "../../../../interfaces/FileMetadata";
 import { BaseFormModal } from "./BaseFormModal";
 import { FileName } from "../form/FileName";
 import { FileDetail } from "../form/FileDetail";
 import { FormCategoriesSelect } from "../form/FormCategoriesSelect";
 import { FormEvent, useEffect, useState } from "react";
-import { Category } from "../../../../interfaces/Categories";
+import { CategoryOption } from "../../../../interfaces/Category";
 import { useAuth0 } from "@auth0/auth0-react";
 import { editFile } from "../../controllers/axios/editFile";
+import { FileMetadata } from "../../../../interfaces/File";
 
 interface EditFileModalProps {
 	isOpen: boolean;
 	onClose: () => void;
-	file: FilesWithCategoriesWithoutPathAndUserID | undefined;
+	file: FileMetadata | undefined;
 }
 
 export const EditFileModal = (props: EditFileModalProps) => {
 	const { getAccessTokenSilently } = useAuth0();
 	const toast = useToast();
 	const [fileMetadata, setFileMetadata] = useState<
-		FilesWithCategoriesWithoutPathAndUserID | undefined
+		FileMetadata | undefined
 	>();
 
 	const [formData, setFormData] = useState({
@@ -52,11 +52,11 @@ export const EditFileModal = (props: EditFileModalProps) => {
 		});
 	}, [props.file]);
 
-	const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+	const [selectedCategory, setSelectedCategory] = useState<CategoryOption | null>(
 		null
 	);
 
-	const handleCategoryChange = (category: Category | null) => {
+	const handleCategoryChange = (category: CategoryOption | null) => {
 		setSelectedCategory(category);
 	};
 
@@ -72,7 +72,7 @@ export const EditFileModal = (props: EditFileModalProps) => {
 			await getAccessTokenSilently(),
 			fileMetadata.uid,
 			{
-				originalname: formData.name,
+				file_name: formData.name,
 				phase_no: formData.phase,
 				unit_no: formData.unit,
 				category_id: selectedCategory?.id,
@@ -129,7 +129,7 @@ export const EditFileModal = (props: EditFileModalProps) => {
 								/>
 							</GridItem>
 
-							<FileName fileName={fileMetadata.originalname} />
+							<FileName fileName={fileMetadata.file_name} />
 						</Grid>
 						<FileDetail
 							label="name"

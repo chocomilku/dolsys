@@ -1,15 +1,12 @@
 import { db } from "../middleware/knex/credentials";
 import * as nanoid from "nanoid";
-import type {
-	FileMetadata,
-	FileMetadataWithID,
-} from "../../interfaces/FileMetadata";
-import { Categories } from "../../interfaces/Categories";
 import { BadRequestError } from "../middleware/errors/errors";
+import { FileUpload, FileUploadWithUid, File } from "../../interfaces/File";
+import { Category } from "../../interfaces/Category";
 
 const UID_LENGTH = 10;
 
-export const addFileMetadata = async (file: Omit<FileMetadata, "uid">) => {
+export const addFileMetadata = async (file: FileUpload) => {
 	if (!file.category_id)
 		throw new BadRequestError("Category ID is not defined");
 
@@ -26,7 +23,7 @@ export const addFileMetadata = async (file: Omit<FileMetadata, "uid">) => {
 		return uid;
 	};
 
-	const finalizedFile: FileMetadata = {
+	const finalizedFile: FileUploadWithUid = {
 		...file,
 		uid: await generateAndCheckUIDCollision(),
 	};
@@ -39,12 +36,12 @@ const generateUID = (length: number) => {
 };
 
 const isUIDConflicting = async (uid: string) => {
-	const files = await db<FileMetadataWithID>("files").where({ uid: uid });
+	const files = await db<File>("files").where({ uid: uid });
 	return files.length > 0;
 };
 
 const validateCategoryId = async (categoryId: number) => {
-	const categories = await db<Categories>("categories").where({
+	const categories = await db<Category>("categories").where({
 		id: categoryId,
 	});
 	return categories.length > 0;

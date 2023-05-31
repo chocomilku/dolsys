@@ -1,20 +1,16 @@
-import { type FileMetadataWithID } from "../../interfaces/FileMetadata";
+import { File, FileEdit } from "../../interfaces/File";
 import {
 	InternalServerError,
 	NotFoundError,
 } from "../middleware/errors/errors";
 import { db } from "../middleware/knex/credentials";
 
-type UpdateFileMetadata = Pick<
-	FileMetadataWithID,
-	"originalname" | "category_id" | "title" | "phase_no" | "unit_no"
->;
 
 export const updateFileMetadata = async (
 	uid: string,
-	file: UpdateFileMetadata
+	file: FileEdit
 ) => {
-	const checkFile = await db<FileMetadataWithID>("files")
+	const checkFile = await db<File>("files")
 		.where({ uid })
 		.first();
 
@@ -22,10 +18,10 @@ export const updateFileMetadata = async (
 
 	// TODO: form validation using zod
 
-	const updateFile = await db<FileMetadataWithID>("files")
+	const updateFile = await db<File>("files")
 		.where({ uid })
 		.update({
-			originalname: file.originalname,
+			file_name: file.file_name,
 			category_id: file.category_id,
 			title: file.title,
 			phase_no: file.phase_no,

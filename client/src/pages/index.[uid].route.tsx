@@ -2,21 +2,22 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { axiosWrapperWithAuthToken } from "../controllers/axios/axiosWrapperWithAuthToken";
 import { useAuth0 } from "@auth0/auth0-react";
-import { FilesWithCategoriesWithoutPathAndUserID } from "../../../interfaces/FileMetadata";
+
 import { axiosWrapper } from "../controllers/axios/axiosWrapper";
+import { FileMetadata } from "../../../interfaces/File";
 
 export const IndexUIDPage = (): JSX.Element => {
 	const { uid } = useParams();
 	const { getAccessTokenSilently } = useAuth0();
 	const [fileMetadata, setFileMetadata] =
-		useState<FilesWithCategoriesWithoutPathAndUserID>();
+		useState<FileMetadata>();
 
 	useEffect(() => {
 		const downloadFileAndFetchMetadata = async () => {
 			try {
 				const access_token = await getAccessTokenSilently();
 				const fetchFileMetadata =
-					await axiosWrapperWithAuthToken<FilesWithCategoriesWithoutPathAndUserID>(
+					await axiosWrapperWithAuthToken<FileMetadata>(
 						access_token,
 						{
 							url: `/files/${uid}`,
@@ -37,7 +38,7 @@ export const IndexUIDPage = (): JSX.Element => {
 				const url = window.URL.createObjectURL(new Blob([downloadFile.data]));
 				const link = document.createElement("a");
 				link.href = url;
-				link.setAttribute("download", fetchFileMetadata.data.originalname);
+				link.setAttribute("download", fetchFileMetadata.data.file_name);
 				document.body.appendChild(link);
 				link.click();
 				link.parentNode?.removeChild(link);
@@ -52,9 +53,9 @@ export const IndexUIDPage = (): JSX.Element => {
 		<>
 			<h1>Thank you for downloading!</h1>
 			<hr />
-			<h3>{fileMetadata?.name}</h3>
-			<kbd>{fileMetadata?.code}</kbd>
-			<p>Downloads: {fileMetadata?.downloadCount}</p>
+			<h3>{fileMetadata?.title}</h3>
+			<kbd>{fileMetadata?.category_code}</kbd>
+			<p>Downloads: {fileMetadata?.download_count}</p>
 		</>
 	);
 };
