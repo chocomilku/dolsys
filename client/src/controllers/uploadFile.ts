@@ -1,7 +1,7 @@
 import type {
-	FileMetadataWithID,
-} from "../../../interfaces/FileMetadata";
-import type { FileUploadWithoutFileAttributes } from "../../../interfaces/File";
+	File as FileInterface,
+	FileUploadWithoutFileAttributes
+} from "../../../interfaces/File";
 import { axiosWrapperWithAuthToken } from "./axios/axiosWrapperWithAuthToken";
 
 export const uploadFile = async (
@@ -17,7 +17,7 @@ export const uploadFile = async (
 	formData.append("phase_no", metadata.phase_no ?? "");
 	formData.append("unit_no", metadata.unit_no ?? "");
 
-	const uploadFile = await axiosWrapperWithAuthToken<FileMetadataWithID>(
+	const uploadFile = await axiosWrapperWithAuthToken<FileInterface>(
 		access_token,
 		{
 			method: "POST",

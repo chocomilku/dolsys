@@ -1,10 +1,10 @@
-import { FilesWithCategories } from "../../interfaces/FileMetadata";
+import { FileWithCategory } from "../../interfaces/File";
 import { db } from "../middleware/knex/credentials";
 
 export const getFileMetadata = async (
-	specificParams: Partial<FilesWithCategories>
+	specificParams: Partial<FileWithCategory>
 ) => {
-	return await db<FilesWithCategories>("files_with_categories")
+	return await db<FileWithCategory>("files_with_categories")
 		.where(specificParams)
 		.first();
 };
@@ -25,7 +25,7 @@ export const getFilesMetadata = async (params?: GetFilesMetadataParams) => {
 		params?.limit,
 		params?.orderBy,
 	];
-	return await db<FilesWithCategories>("files_with_categories")
+	return await db<FileWithCategory>("files_with_categories")
 		.offset(offset ?? OFFSET)
 		.limit(limit ?? LIMIT)
 		.orderBy("id", orderBy ?? ORDER_BY);

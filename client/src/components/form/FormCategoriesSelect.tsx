@@ -1,31 +1,31 @@
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react";
 import { Select as ReactSelect } from "chakra-react-select";
 import { useState, useEffect } from "react";
-import { Categories } from "../../../../interfaces/Categories";
+import { Category } from "../../../../interfaces/Category";
 import { axiosWrapper } from "../../controllers/axios/axiosWrapper";
-import { Category } from "../../../../interfaces/Categories";
+import { CategoryOption } from "../../../../interfaces/Category";
 
 interface FormCategoriesSelectProps {
 	isInputErrorEnabled: boolean;
-	preSelectedCategoryId?: Categories["id"];
-	selectedCategory: Category | null;
-	onCategoryChange: (category: Category | null) => void;
+	preSelectedCategoryId?: Category["id"];
+	selectedCategory: CategoryOption | null;
+	onCategoryChange: (category: CategoryOption | null) => void;
 }
 
 export const FormCategoriesSelect = (props: FormCategoriesSelectProps) => {
-	const [categoryOptions, setCategoryOptions] = useState<Category[]>([]);
+	const [categoryOptions, setCategoryOptions] = useState<CategoryOption[]>([]);
 
 	const isCategoryEmpty = props.selectedCategory === null;
 
 	useEffect(() => {
 		const fetchCategoryOptions = async () => {
-			const categories = await axiosWrapper<Categories[]>({
+			const categories = await axiosWrapper<Category[]>({
 				url: "/categories",
 				method: "GET",
 			});
 			if (!categories.data) return;
 			const options = categories.data.map((category) => {
-				return new Category(
+				return new CategoryOption(
 					category.id,
 					category.name,
 					category.code,

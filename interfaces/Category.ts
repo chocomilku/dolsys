@@ -29,3 +29,26 @@ export interface Category {
      */
     color: string;
 }
+
+export interface CategoryWithoutID extends Omit<Category, "id"> {}
+
+export class CategoryOption  {
+	readonly id: number;
+	name: string;
+	code?: string;
+	scope_level?: string;
+	constructor(id: number, name: string, code?: string, scope_level?: string) {
+		this.id = id;
+		this.name = name;
+		this.code = code;
+		this.scope_level = scope_level;
+	}
+
+	public value = () => {
+		return `${this.id}${this.code && `-${this.code}`}`;
+	};
+
+	public label = () => {
+		return `${this.name} ${this.scope_level && `${this.scope_level}`}`;
+	};
+}

@@ -1,8 +1,8 @@
 import { Request, Response, Router } from "express";
 import { db } from "../../middleware/knex/credentials";
-import { FileMetadataWithID } from "../../../interfaces/FileMetadata";
 import { getFileMetadata } from "../../controller/getFileMetadata";
 import { NotFoundError } from "../../middleware/errors/errors";
+import { File } from "../../../interfaces/File";
 
 const router = Router();
 
@@ -13,7 +13,7 @@ router.get("/:uid/download", async (req: Request, res: Response) => {
 
 	if (!file) throw new NotFoundError("File not found");
 
-	await db<FileMetadataWithID>("files")
+	await db<File>("files")
 		.where({ uid })
 		.increment("downloadCount", 1);
 
