@@ -1,55 +1,44 @@
-import {
-  FormControl,
-  FormLabel,
-  Grid,
-  GridItem,
-  Input,
-  useToast,
-} from "@chakra-ui/react";
-import { Category } from "../../../../interfaces/Category";
-import React, { useEffect, useState } from "react";
+import { Grid, GridItem, useToast } from "@chakra-ui/react";
+import { CategoryWithoutID } from "../../../../interfaces/Category";
+import React, { useState } from "react";
 import { BaseFormModal } from "./BaseFormModal";
 import { FormDetail } from "../form/FormDetail";
 import { useAuth0 } from "@auth0/auth0-react";
-import { editCategory } from "../../controllers/editCategory";
+import { addCategory } from "../../controllers/addCategory";
 
-interface EditCategoryModalProps {
+interface AddCategoryModalProps {
   isOpen: boolean;
   onClose: () => void;
-  category: Category;
 }
 
-export const EditCategoryModal = (props: EditCategoryModalProps) => {
+export const AddCategoryModal = (props: AddCategoryModalProps) => {
   const { getAccessTokenSilently } = useAuth0();
   const toast = useToast();
-  const [category, setCategory] = useState<Category>(props.category);
-
-  useEffect(() => {
-    setCategory(props.category);
-  }, [props.category]);
+  const [category, setCategory] = useState<CategoryWithoutID>({
+    name: "",
+    code: "",
+    scope_level: "",
+    color: "",
+  });
 
   const handleFormChange = (event: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
 
-    setCategory((prevState) => {
-      return {
-        ...prevState,
-        [name]: value,
-      };
-    });
+    setCategory({ ...category, [name]: value });
   };
 
-  const submitEdits = async () => {
-    const response = await editCategory(
+  const submitCategory = async () => {
+    if (!category) return;
+
+    const response = await addCategory(
       await getAccessTokenSilently(),
       category
     );
-
-    if (!response || (response && response.status !== 200)) return;
+    if (!response) return;
 
     toast({
-      title: "Category Updated!",
-      description: "Category has been updated.",
+      title: "Category Added!",
+      description: "Category has been added.",
       status: "success",
       duration: 10000,
       isClosable: true,
@@ -66,21 +55,11 @@ export const EditCategoryModal = (props: EditCategoryModalProps) => {
         size="xl"
         formData={{
           header: "Edit Category",
-          submitAction: () => submitEdits(),
+          submitText: "Add Category",
+          submitAction: () => submitCategory(),
         }}
       >
-        <Grid templateColumns={{ base: "1fr", md: "1fr 8fr" }}>
-          <GridItem as={FormControl}>
-            <FormLabel>ID:</FormLabel>
-            <Input
-              type="number"
-              placeholder={"File ID"}
-              isReadOnly
-              isTruncated
-              colorScheme="purple"
-              value={category.id}
-            />
-          </GridItem>
+        <Grid>
           <GridItem>
             <FormDetail
               label="name"
