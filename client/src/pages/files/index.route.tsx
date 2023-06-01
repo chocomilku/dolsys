@@ -39,9 +39,7 @@ import { FileMetadata } from "../../../../interfaces/File";
 const LIMIT = 10;
 
 export const FilesIndexPage = (): JSX.Element => {
-	const [filesList, setFilesList] = useState<
-		FileMetadata[]
-	>([]);
+	const [filesList, setFilesList] = useState<FileMetadata[]>([]);
 	const [pagination, setPagination] = useState<PaginationDetails>();
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [selectedFileEdit, setSelectedFileEdit] = useState<
@@ -123,8 +121,7 @@ export const FilesIndexPage = (): JSX.Element => {
 		fetchFilesList();
 	}, [getAccessTokenSilently, currentPage]);
 
-	const columnHelper =
-		createColumnHelper<FileMetadata>();
+	const columnHelper = createColumnHelper<FileMetadata>();
 
 	type AddColumnKey = FileMetadata & {
 		action: unknown;
@@ -145,7 +142,7 @@ export const FilesIndexPage = (): JSX.Element => {
 		"category_name",
 		"category_code",
 		"category_scope_level",
-		"category_code"
+		"category_code",
 	];
 
 	const columns = columnKeys.map((key) => {
@@ -175,13 +172,10 @@ export const FilesIndexPage = (): JSX.Element => {
 			});
 		}
 
-		return columnHelper.accessor(
-			key as keyof FileMetadata,
-			{
-				header: key,
-				cell: (info) => info.getValue(),
-			}
-		);
+		return columnHelper.accessor(key as keyof FileMetadata, {
+			header: key,
+			cell: (info) => info.getValue(),
+		});
 	});
 
 	const tableInstance = useReactTable({

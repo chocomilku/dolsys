@@ -21,9 +21,7 @@ router.post(
 	authMiddleware,
 	checkRequiredPermissions(["upload:files"]),
 	async (
-		req: TypedRequestBody<
-			Partial<FileUpload>
-		>,
+		req: TypedRequestBody<Partial<FileUpload>>,
 		res: Response,
 		next: NextFunction
 	) => {
