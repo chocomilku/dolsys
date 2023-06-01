@@ -4,7 +4,7 @@ import { Category } from "../../../../interfaces/Category";
 import { useAuth0 } from "@auth0/auth0-react";
 import { axiosWrapperWithAuthToken } from "../../controllers/axios/axiosWrapperWithAuthToken";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { AiFillEdit, AiFillDelete } from "react-icons/ai";
+import { AiFillEdit} from "react-icons/ai";
 import { EditCategoryModal } from "../../components/modal/EditCategoryModal";
 
 export const CategoryIndexPage = (): JSX.Element => {
@@ -69,13 +69,6 @@ const columns = columnKeys.map((key) => {
 								colorScheme="blue"
 								icon={<AiFillEdit />}
 								onClick={() => editCategoryModalOpen(props.row.index)}
-							/>
-							<IconButton
-								aria-label="Delete File"
-								variant="solid"
-								colorScheme="red"
-								icon={<AiFillDelete />}
-								
 							/>
 						</HStack>
 				)
