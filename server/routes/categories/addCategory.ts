@@ -26,8 +26,9 @@ router.post(
 
 			const categorySchema = z.object({
 				name: z.string(),
-				code: z.string().max(12).optional(),
+				code: z.string().max(12),
 				scope_level: z.string().max(24).optional(),
+				color: z.string().max(7).optional(),
 			});
 
 			const parsedCategory = categorySchema.parse(category);

@@ -17,7 +17,7 @@ router.get("/:uid/download", async (req: Request, res: Response) => {
 		.where({ uid })
 		.increment("downloadCount", 1);
 
-	return res.download(file.path, file.originalname);
+	return res.download(file.path, file.file_name);
 });
 
 export const dlRoute: Router = router;

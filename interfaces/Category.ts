@@ -27,7 +27,7 @@ export interface Category {
      * The color of the category of the file.
      * @remarks This is the color of the category of the file and it has an SQL data type of `varchar(7) DEFAULT '#000000'`
      */
-    color: string;
+    color?: string;
 }
 
 export interface CategoryWithoutID extends Omit<Category, "id"> {}
