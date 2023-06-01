@@ -1,4 +1,4 @@
-import { GridItem, FormControl, Select } from "@chakra-ui/react";
+import { GridItem, FormControl, Select, FormLabel } from "@chakra-ui/react";
 import { AvatarIcon } from "../AvatarIcon";
 
 interface FileUserProps {
@@ -9,6 +9,9 @@ interface FileUserProps {
 export const FileUser = (props: FileUserProps) => {
 	return (
 		<GridItem as={FormControl}>
+			<FormLabel>
+				User:
+			</FormLabel>
 			<Select
 				isReadOnly
 				placeholder={props.name ?? "User"}

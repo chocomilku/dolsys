@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { BaseFormModal } from "./BaseFormModal";
 import { FileName } from "../form/FileName";
-import { FileDetail } from "../form/FileDetail";
+import { FormDetail } from "../form/FormDetail";
 import { FormCategoriesSelect } from "../form/FormCategoriesSelect";
 import { FormEvent, useEffect, useState } from "react";
 import { CategoryOption } from "../../../../interfaces/Category";
@@ -72,13 +72,13 @@ export const EditFileModal = (props: EditFileModalProps) => {
 			await getAccessTokenSilently(),
 			fileMetadata.uid,
 			{
-				file_name: formData.name,
+				title: formData.name,
 				phase_no: formData.phase,
 				unit_no: formData.unit,
 				category_id: selectedCategory?.id,
 			}
 		);
-		if (!response) return;
+		if (!response || (response && response.status !== 200)) return;
 
 		toast({
 			title: "File Updated!",
@@ -131,7 +131,7 @@ export const EditFileModal = (props: EditFileModalProps) => {
 
 							<FileName fileName={fileMetadata.file_name} />
 						</Grid>
-						<FileDetail
+						<FormDetail
 							label="name"
 							maxW={"full"}
 							onChange={handleFormChange}
@@ -149,14 +149,14 @@ export const EditFileModal = (props: EditFileModalProps) => {
 								/>
 							</GridItem>
 							<GridItem>
-								<FileDetail
+								<FormDetail
 									label="phase"
 									onChange={handleFormChange}
 									value={formData.phase}
 								/>
 							</GridItem>
 							<GridItem>
-								<FileDetail
+								<FormDetail
 									label="unit"
 									onChange={handleFormChange}
 									value={formData.unit}

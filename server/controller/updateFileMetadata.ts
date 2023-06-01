@@ -21,7 +21,6 @@ export const updateFileMetadata = async (
 	const updateFile = await db<File>("files")
 		.where({ uid })
 		.update({
-			file_name: file.file_name,
 			category_id: file.category_id,
 			title: file.title,
 			phase_no: file.phase_no,

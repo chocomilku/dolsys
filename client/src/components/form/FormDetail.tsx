@@ -8,7 +8,7 @@ import {
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
 import React, { memo, useCallback, useMemo } from "react";
 
-interface FileDetailProps {
+interface FormDetailProps {
 	/**
 	 * @description
 	 * Label for the input
@@ -79,7 +79,7 @@ interface FileDetailProps {
 
 const MemoizedInput = memo(Input);
 
-export const FileDetail = (props: FileDetailProps) => {
+export const FormDetail = (props: FormDetailProps) => {
 	const formIdentifier = useMemo(() => {
 		return (isCapitalized = false) => {
 			if (!isCapitalized) return props.label;
