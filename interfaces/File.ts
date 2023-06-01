@@ -131,5 +131,5 @@ export interface FileUploadWithoutFileAttributes extends Omit<FileUpload, "path"
 /**
  * File interface that picks the attributes that can be edited.
  */
-
-export interface FileEdit extends Pick<File, "title" | "category_id" | "phase_no" | "unit_no" | "file_name"> {}
+// `file_name` to be added after demo and if file name is changed to be editable on the modal
+export interface FileEdit extends Pick<File, "title" | "category_id" | "phase_no" | "unit_no"> {}

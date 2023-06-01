@@ -142,7 +142,7 @@ export const FilesIndexPage = (): JSX.Element => {
 		"category_name",
 		"category_code",
 		"category_scope_level",
-		"category_code",
+		"category_color",
 	];
 
 	const columns = columnKeys.map((key) => {

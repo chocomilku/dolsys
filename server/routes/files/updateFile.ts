@@ -27,14 +27,12 @@ router.put(
 			const reqFileBody = req.body;
 			const checkedBody = z
 				.object({
-					file_name: z.string(),
 					category_id: z.number(),
 					title: z.string().optional(),
 					phase_no: z.string().optional(),
 					unit_no: z.string().optional(),
 				})
 				.parse({
-					file_name: reqFileBody.file_name,
 					category_id: reqFileBody.category_id,
 					title: reqFileBody.title,
 					phase_no: reqFileBody.phase_no,

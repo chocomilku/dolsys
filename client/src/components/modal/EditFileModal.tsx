@@ -72,13 +72,13 @@ export const EditFileModal = (props: EditFileModalProps) => {
 			await getAccessTokenSilently(),
 			fileMetadata.uid,
 			{
-				file_name: formData.name,
+				title: formData.name,
 				phase_no: formData.phase,
 				unit_no: formData.unit,
 				category_id: selectedCategory?.id,
 			}
 		);
-		if (!response) return;
+		if (!response || (response && response.status !== 200)) return;
 
 		toast({
 			title: "File Updated!",

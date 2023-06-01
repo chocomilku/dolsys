@@ -1,5 +1,5 @@
 import { Box, Container, HStack, Heading, IconButton, Table, Tbody, Td, Th, Thead, Tr, VStack, useDisclosure } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Category } from "../../../../interfaces/Category";
 import { useAuth0 } from "@auth0/auth0-react";
 import { axiosWrapperWithAuthToken } from "../../controllers/axios/axiosWrapperWithAuthToken";
@@ -25,23 +25,29 @@ const {
 	onClose: onModalClose,
 } = useDisclosure();
 
-useEffect(() => {
-	const fetchCategoryList = async () => {
-		const response = await axiosWrapperWithAuthToken<Category[]>(await getAccessTokenSilently(), {
-			method: "GET",
-			url: "/categories",
-		})
-
-		if (!response.data) return;
-
-		setCategoryList(response.data);
-	}
+const fetchCategoryList = useCallback(async () => {
+	const response = await axiosWrapperWithAuthToken<Category[]>(await getAccessTokenSilently(), {
+	method: "GET",
+	url: "/categories",
+	});
+  
+	if (!response.data) return;
+  
+	setCategoryList(response.data);
+  }, [getAccessTokenSilently]);
+  
+  useEffect(() => {
 	fetchCategoryList();
-}, [getAccessTokenSilently])
+  }, [fetchCategoryList]);
 
 const editCategoryModalOpen = (cell_id: number) => {
 	setSelectedCategoryEdit(categoryList[cell_id]);
 	onModalOpen();
+}
+
+const editCategoryModalClose = async () => {
+	await fetchCategoryList();
+	onModalClose();
 }
 
 const columnHelper = createColumnHelper<Category>();
@@ -132,6 +138,6 @@ const tableInstance = useReactTable({
 				</Table>
 			</Box>
 		</VStack>
-		<EditCategoryModal isOpen={isModalOpen} onClose={onModalClose} category={selectedCategoryEdit} />
+		<EditCategoryModal isOpen={isModalOpen} onClose={editCategoryModalClose} category={selectedCategoryEdit} />
 	</>
 };
