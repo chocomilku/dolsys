@@ -1,16 +1,29 @@
-import { Box, Container, HStack, Heading, IconButton, Table, Tbody, Td, Th, Thead, Tr, VStack } from "@chakra-ui/react";
+import { Box, Container, HStack, Heading, IconButton, Table, Tbody, Td, Th, Thead, Tr, VStack, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Category } from "../../../../interfaces/Category";
 import { useAuth0 } from "@auth0/auth0-react";
 import { axiosWrapperWithAuthToken } from "../../controllers/axios/axiosWrapperWithAuthToken";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
+import { EditCategoryModal } from "../../components/modal/EditCategoryModal";
 
 export const CategoryIndexPage = (): JSX.Element => {
 
 const [categoryList, setCategoryList] = useState<Category[]>([]);
+const [selectedCategoryEdit, setSelectedCategoryEdit] = useState<Category>({
+	id: 0,
+	name: "",
+	code: "",
+	scope_level: "",
+	color: ""
+});
 
 const {getAccessTokenSilently} = useAuth0();
+const {
+	isOpen: isModalOpen,
+	onOpen: onModalOpen,
+	onClose: onModalClose,
+} = useDisclosure();
 
 useEffect(() => {
 	const fetchCategoryList = async () => {
@@ -26,12 +39,14 @@ useEffect(() => {
 	fetchCategoryList();
 }, [getAccessTokenSilently])
 
+const editCategoryModalOpen = (cell_id: number) => {
+	setSelectedCategoryEdit(categoryList[cell_id]);
+	onModalOpen();
+}
+
 const columnHelper = createColumnHelper<Category>();
-
 type AddColumnKey = Category & {action: unknown};
-
 type ColumnKeys = (keyof AddColumnKey)[];
-
 const columnKeys: ColumnKeys = [
 	"action",
 	"id",
@@ -53,7 +68,7 @@ const columns = columnKeys.map((key) => {
 								variant="solid"
 								colorScheme="blue"
 								icon={<AiFillEdit />}
-								
+								onClick={() => editCategoryModalOpen(props.row.index)}
 							/>
 							<IconButton
 								aria-label="Delete File"
@@ -123,7 +138,7 @@ const tableInstance = useReactTable({
 						</Tbody>
 				</Table>
 			</Box>
-			
 		</VStack>
+		<EditCategoryModal isOpen={isModalOpen} onClose={onModalClose} category={selectedCategoryEdit} />
 	</>
 };

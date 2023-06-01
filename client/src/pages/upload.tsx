@@ -25,7 +25,7 @@ import { FileUploadArea } from "../components/form/FileUploadArea";
 import { FileName } from "../components/form/FileName";
 import { FileUser } from "../components/form/FileUser";
 import { FileUploadButton } from "../components/form/FileUploadButton";
-import { FileDetail } from "../components/form/FileDetail";
+import { FormDetail } from "../components/form/FormDetail";
 
 export const UploadPage = (): JSX.Element => {
 	const [file, setFile] = useState<File>();
@@ -213,7 +213,7 @@ export const UploadPage = (): JSX.Element => {
 							<FileName fileName={file?.name} />
 							<FileUser name={user?.name} picture={user?.picture} />
 						</Grid>
-						<FileDetail
+						<FormDetail
 							label="name"
 							onChange={handleFormChange}
 							value={formData.name}
@@ -226,13 +226,13 @@ export const UploadPage = (): JSX.Element => {
 								onCategoryChange={handleCategoryChange}
 								selectedCategory={selectedCategory}
 							/>
-							<FileDetail
+							<FormDetail
 								label="phase"
 								onChange={handleFormChange}
 								value={formData.phase}
 								maxW={{ base: "100%", md: "100px" }}
 							/>
-							<FileDetail
+							<FormDetail
 								label="unit"
 								onChange={handleFormChange}
 								value={formData.unit}
