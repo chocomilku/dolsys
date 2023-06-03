@@ -2,7 +2,8 @@ import { BaseFormModal } from "./BaseFormModal";
 import { FileMetadata } from "../../../../interfaces/File";
 import { CustomQRCode } from "../QRCode";
 import { Box, Code, Flex, LightMode } from "@chakra-ui/react";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
+import html2canvas from "html2canvas";
 
 interface DownloadQRModalProps {
   isOpen: boolean;
@@ -11,9 +12,21 @@ interface DownloadQRModalProps {
 }
 
 export const DownloadQRModal = (props: DownloadQRModalProps) => {
+  const ref = useRef<HTMLDivElement>(null);
   const fileLink = useMemo(() => {
     return `${window.location.origin}/${props.file?.uid}`;
   }, [props.file?.uid]);
+
+  const downloadQR = () => {
+    if (!ref.current) return;
+
+    html2canvas(ref.current).then((canvas) => {
+      const link = document.createElement("a");
+      link.download = `${props.file?.uid ?? "qr-code"}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    });
+  };
 
   return (
     <BaseFormModal
@@ -22,7 +35,7 @@ export const DownloadQRModal = (props: DownloadQRModalProps) => {
       formData={{
         header: "Download QR Code",
         submitText: "Download",
-        submitAction: () => alert("i"),
+        submitAction: () => downloadQR(),
         stayOnClick: true,
       }}
     >
@@ -33,6 +46,7 @@ export const DownloadQRModal = (props: DownloadQRModalProps) => {
         borderColor="blackAlpha.900"
         borderWidth="1px"
         borderStyle="solid"
+        ref={ref}
       >
         <Flex direction="column" alignItems="center" justifyContent="center">
           <CustomQRCode
