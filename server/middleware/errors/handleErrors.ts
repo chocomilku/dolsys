@@ -13,18 +13,22 @@ export const handleErrors: ErrorRequestHandler = (
 	console.error(err.stack);
 
 	if (err instanceof ZodError) {
-		return res.status(400).json({
+		res.status(400).json({
 			error: err.errors,
 		});
-	}
-
-	if (err instanceof UnauthorizedError || err instanceof HTTPError) {
-		return res.status(err.status).json({
+	} else if (err instanceof UnauthorizedError) {
+		res.status(err.status).json({
+			error: err.message,
+		});
+	} else if (err instanceof HTTPError) {
+		res.status(err.status).json({
 			error: err.message,
 		});
 	}
+	else {
+		res.status(500).json({
+			error: err.message || "Something went wrong",
+		});
+	}
 
-	return res.status(500).json({
-		error: err.message || "Something went wrong",
-	});
 };
