@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { axiosWrapperWithAuthToken } from "../controllers/axios/axiosWrapperWithAuthToken";
-import { useAuth0 } from "@auth0/auth0-react";
 import { axiosWrapper } from "../controllers/axios/axiosWrapper";
 import { FileMetadata } from "../../../interfaces/File";
 import {
@@ -12,12 +10,12 @@ import {
   Text,
   Code,
   Spinner,
+  DarkMode,
 } from "@chakra-ui/react";
 import "../styles/home.css";
 
 export const IndexUIDPage = (): JSX.Element => {
   const { uid } = useParams();
-  const { getAccessTokenSilently } = useAuth0();
   const [fileMetadata, setFileMetadata] = useState<FileMetadata>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
@@ -29,14 +27,10 @@ export const IndexUIDPage = (): JSX.Element => {
         setIsError(false);
         setErrorMessage("");
         setIsLoading(true);
-        const access_token = await getAccessTokenSilently();
-        const fetchFileMetadata = await axiosWrapperWithAuthToken<FileMetadata>(
-          access_token,
-          {
-            url: `/files/${uid}`,
-            method: "GET",
-          }
-        );
+        const fetchFileMetadata = await axiosWrapper<FileMetadata>({
+          url: `/files/${uid}`,
+          method: "GET",
+        });
 
         if (fetchFileMetadata.status !== 200) {
           setIsError(true);
@@ -75,7 +69,7 @@ export const IndexUIDPage = (): JSX.Element => {
       }
     };
     downloadFileAndFetchMetadata();
-  }, [getAccessTokenSilently, uid]);
+  }, [uid]);
 
   return (
     <>
@@ -97,24 +91,28 @@ export const IndexUIDPage = (): JSX.Element => {
             ) : isError ? (
               <>
                 <Heading textColor="white">{errorMessage}</Heading>
-                <Code fontSize="xl">
-                  - Check your spelling {""}
-                  <br />- Service might be down {""}
-                  <br />- Try again later
-                </Code>
+                <DarkMode>
+                  <Code fontSize="xl">
+                    - Check your spelling {""}
+                    <br />- Service might be down {""}
+                    <br />- Try again later
+                  </Code>
+                </DarkMode>
               </>
             ) : (
               <>
                 <Heading textColor="white">Thanks for Downloading!</Heading>
-                <Code fontSize={"3xl"} textAlign="center">
-                  <Text>{fileMetadata?.title}</Text>
-                  <Text>{fileMetadata?.file_name}</Text>
-                  <Text>
-                    {fileMetadata?.category_name}{" "}
-                    {fileMetadata?.category_scope_level}
-                  </Text>
-                  <Text>DL Count: {fileMetadata?.download_count}</Text>
-                </Code>
+                <DarkMode>
+                  <Code fontSize={"3xl"} textAlign="center">
+                    <Text>{fileMetadata?.title}</Text>
+                    <Text>{fileMetadata?.file_name}</Text>
+                    <Text>
+                      {fileMetadata?.category_name}{" "}
+                      {fileMetadata?.category_scope_level}
+                    </Text>
+                    <Text>DL Count: {fileMetadata?.download_count}</Text>
+                  </Code>
+                </DarkMode>
               </>
             )}
           </Flex>
