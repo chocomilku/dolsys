@@ -14,54 +14,107 @@ import { VscFiles } from "react-icons/vsc";
 import Footer from "./components/footer/Footer";
 import { FilesRoutes } from "./pages/files";
 import { MdCloudUpload } from "react-icons/md";
+import { ProtectedRoute } from "./ProtectedRoute";
+import { Box } from "@chakra-ui/react";
+import {
+  decodeUserPermissions,
+  permissionCheck,
+} from "./utils/permissionCheck";
+import { Scopes } from "../../interfaces/Scopes";
+import { routes } from "../../interfaces/Routes";
 
-const navBarRoutes: NavLinkButtonProps[] = [
-	{
-		to: "/",
-		leftIcon: <AiFillHome />,
-		pathName: "Home",
-		end: true,
-	},
-	{
-		to: "/files",
-		leftIcon: <VscFiles />,
-		pathName: "Files",
-	},
-	{
-		to: "/categories",
-		leftIcon: <BiCategoryAlt />,
-		pathName: "Categories",
-	},
-	{
-		to: "/upload",
-		leftIcon: <MdCloudUpload />,
-		pathName: "Upload",
-	},
-];
+import { useEffect, useState } from "react";
 
 function App(): JSX.Element {
-	const { user, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const [userPermissions, setUserPermissions] = useState<Scopes[]>([]);
 
-	return (
-		<>
-			<NavBar
-				isAuthenticated={isAuthenticated}
-				user={user}
-				navBarLinks={navBarRoutes}
-			/>
-			<main>
-				<Routes>
-					<Route path="/" element={<IndexPage />} />
-					<Route path="/upload" element={<UploadPage />} />
-					<Route path="/files/*" element={<FilesRoutes />} />
-					<Route path="/categories/*" element={<CategoryRoutes />} />
-					<Route path="/:uid" element={<IndexUIDPage />} />
-					<Route path="*" element={<NotFoundPage />} />
-				</Routes>
-			</main>
-			<Footer />
-		</>
-	);
+  useEffect(() => {
+    const getUserPermissions = async () => {
+      if (!isAuthenticated) return;
+      const token = await getAccessTokenSilently();
+      if (!token) return;
+      const permissions = decodeUserPermissions(token);
+
+      setUserPermissions(permissions);
+    };
+    getUserPermissions();
+  }, [getAccessTokenSilently, isAuthenticated]);
+
+  const navBarRoutes: NavLinkButtonProps[] = [
+    {
+      to: "/",
+      leftIcon: <AiFillHome />,
+      pathName: "Home",
+      end: true,
+    },
+    {
+      to: "/files",
+      leftIcon: <VscFiles />,
+      pathName: "Files",
+      isUserNotAllowed: !isAuthenticated
+        ? true
+        : permissionCheck(userPermissions, routes.Files.scopes),
+    },
+    {
+      to: "/categories",
+      leftIcon: <BiCategoryAlt />,
+      pathName: "Categories",
+      isUserNotAllowed: !isAuthenticated
+        ? true
+        : permissionCheck(userPermissions, routes.Categories.scopes),
+    },
+    {
+      to: "/upload",
+      leftIcon: <MdCloudUpload />,
+      pathName: "Upload",
+      isUserNotAllowed: !isAuthenticated
+        ? true
+        : permissionCheck(userPermissions, routes.Upload.scopes),
+    },
+  ];
+
+  return (
+    <>
+      <NavBar
+        isAuthenticated={isAuthenticated}
+        user={user}
+        navBarLinks={navBarRoutes}
+      />
+      <Box minHeight="100vh">
+        <Routes>
+          <Route path="/" element={<IndexPage />} />
+          <Route
+            path="/upload"
+            element={
+              <ProtectedRoute requiredPermissions={routes.Upload.scopes}>
+                <UploadPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/files/*"
+            element={
+              <ProtectedRoute requiredPermissions={routes.Files.scopes}>
+                <FilesRoutes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/categories/*"
+            element={
+              <ProtectedRoute requiredPermissions={routes.Categories.scopes}>
+                <CategoryRoutes />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/:uid" element={<IndexUIDPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Box>
+      <Footer />
+    </>
+  );
 }
 
 export default App;
