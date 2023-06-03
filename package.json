@@ -1,6 +1,6 @@
 {
 	"name": "dolsys",
-	"version": "0.5.0-dev",
+	"version": "0.6.0-dev",
 	"scripts": {
 		"client:dev": "cd client && npm run dev",
 		"client:build": "cd client && npm run build",
