@@ -1,7 +1,8 @@
-import { chakra, Flex } from "@chakra-ui/react";
+import { Box, chakra, Flex, Text } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import { Logo } from "../Logo";
 import { BsFacebook, BsGithub } from "react-icons/bs";
+import { VERSION } from "../../../../utils/version";
 
 const Footer = () => {
   return (
@@ -29,9 +30,15 @@ const Footer = () => {
           <Logo />
         </NavLink>
 
-        <chakra.p color="gray.800" _dark={{ color: "white" }}>
-          All rights reserved. &copy; chocomilku 2023
-        </chakra.p>
+        <Box textAlign="center">
+          <chakra.p color="gray.800" _dark={{ color: "white" }}>
+            All rights reserved. &copy; chocomilku 2023
+          </chakra.p>
+          <Text fontSize="3xs" fontFamily="monospace">
+            DOLSYS: {VERSION.app} Client: {VERSION.client} Server:{" "}
+            {VERSION.server}
+          </Text>
+        </Box>
 
         <Flex mx="-2">
           <chakra.a
