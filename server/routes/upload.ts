@@ -12,6 +12,7 @@ import {
 } from "../middleware/errors/errors";
 import { getFileMetadata } from "../controller/getFileMetadata";
 import { FileUpload } from "../../interfaces/File";
+import { routes } from "../../interfaces/Routes";
 
 const router: Router = Router();
 
@@ -19,7 +20,7 @@ router.post(
 	"/",
 	upload.single("file"),
 	authMiddleware,
-	checkRequiredPermissions(["upload:files"]),
+	checkRequiredPermissions(routes.Upload.scopes),
 	async (
 		req: TypedRequestBody<Partial<FileUpload>>,
 		res: Response,

@@ -21,6 +21,7 @@ import {
   permissionCheck,
 } from "./utils/permissionCheck";
 import { Scopes } from "../../interfaces/Scopes";
+import { routes } from "../../interfaces/Routes";
 
 import { useEffect, useState } from "react";
 
@@ -53,7 +54,7 @@ function App(): JSX.Element {
       pathName: "Files",
       isUserNotAllowed: !isAuthenticated
         ? true
-        : permissionCheck(userPermissions, ["view:files"]),
+        : permissionCheck(userPermissions, routes.Files.scopes),
     },
     {
       to: "/categories",
@@ -61,7 +62,7 @@ function App(): JSX.Element {
       pathName: "Categories",
       isUserNotAllowed: !isAuthenticated
         ? true
-        : permissionCheck(userPermissions, ["view:category"]),
+        : permissionCheck(userPermissions, routes.Categories.scopes),
     },
     {
       to: "/upload",
@@ -69,7 +70,7 @@ function App(): JSX.Element {
       pathName: "Upload",
       isUserNotAllowed: !isAuthenticated
         ? true
-        : permissionCheck(userPermissions, ["upload:files"]),
+        : permissionCheck(userPermissions, routes.Upload.scopes),
     },
   ];
 
@@ -83,16 +84,30 @@ function App(): JSX.Element {
       <Box minHeight="100vh">
         <Routes>
           <Route path="/" element={<IndexPage />} />
-          <Route path="/upload" element={<UploadPage />} />
+          <Route
+            path="/upload"
+            element={
+              <ProtectedRoute requiredPermissions={routes.Upload.scopes}>
+                <UploadPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/files/*"
             element={
-              <ProtectedRoute requiredPermissions={["view:files"]}>
+              <ProtectedRoute requiredPermissions={routes.Files.scopes}>
                 <FilesRoutes />
               </ProtectedRoute>
             }
           />
-          <Route path="/categories/*" element={<CategoryRoutes />} />
+          <Route
+            path="/categories/*"
+            element={
+              <ProtectedRoute requiredPermissions={routes.Categories.scopes}>
+                <CategoryRoutes />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/:uid" element={<IndexUIDPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
