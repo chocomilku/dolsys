@@ -3,10 +3,15 @@ import { listCategoriesFromDB } from "../../controller/listCategoriesFromDB";
 
 const router: Router = Router();
 
-router.get("/", async (req, res) => {
-	const categories = await listCategoriesFromDB();
+router.get("/", async (req, res, next) => {
+	try {
 
-	res.status(200).json(categories);
+		const categories = await listCategoriesFromDB();
+	
+		res.status(200).json(categories);
+	} catch (error) {
+		next(error);
+	}
 });
 
 export const listCategoriesRoute: Router = router;

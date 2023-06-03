@@ -27,3 +27,7 @@
     text-shadow: 3px 3px 2px rgba(45, 45, 45, 0.3);;
     font-family: 'Righteous', cursive !important;
 }
+
+.dl {
+    background-image: url("../../assets/dl.svg");
+}

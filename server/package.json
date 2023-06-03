@@ -1,7 +1,7 @@
 {
 	"name": "dolsys-server",
 	"main": "server.ts",
-	"version": "0.5.0-dev",
+	"version": "0.5.1-dev",
 	"scripts": {
 		"start": "ts-node .",
 		"dev": "ts-node-dev --respawn .",
@@ -34,7 +34,7 @@
 		"@typescript-eslint/parser": "^5.59.0",
 		"eslint": "^8.39.0",
 		"eslint-config-prettier": "^8.8.0",
-		"prettier": "2.8.7",
+		"prettier": "^2.8.7",
 		"prettier-eslint-cli": "^7.1.0",
 		"typescript": "^5.0.4"
 	}
