@@ -14,54 +14,62 @@ import { VscFiles } from "react-icons/vsc";
 import Footer from "./components/footer/Footer";
 import { FilesRoutes } from "./pages/files";
 import { MdCloudUpload } from "react-icons/md";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 const navBarRoutes: NavLinkButtonProps[] = [
-	{
-		to: "/",
-		leftIcon: <AiFillHome />,
-		pathName: "Home",
-		end: true,
-	},
-	{
-		to: "/files",
-		leftIcon: <VscFiles />,
-		pathName: "Files",
-	},
-	{
-		to: "/categories",
-		leftIcon: <BiCategoryAlt />,
-		pathName: "Categories",
-	},
-	{
-		to: "/upload",
-		leftIcon: <MdCloudUpload />,
-		pathName: "Upload",
-	},
+  {
+    to: "/",
+    leftIcon: <AiFillHome />,
+    pathName: "Home",
+    end: true,
+  },
+  {
+    to: "/files",
+    leftIcon: <VscFiles />,
+    pathName: "Files",
+  },
+  {
+    to: "/categories",
+    leftIcon: <BiCategoryAlt />,
+    pathName: "Categories",
+  },
+  {
+    to: "/upload",
+    leftIcon: <MdCloudUpload />,
+    pathName: "Upload",
+  },
 ];
 
 function App(): JSX.Element {
-	const { user, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
 
-	return (
-		<>
-			<NavBar
-				isAuthenticated={isAuthenticated}
-				user={user}
-				navBarLinks={navBarRoutes}
-			/>
-			<main>
-				<Routes>
-					<Route path="/" element={<IndexPage />} />
-					<Route path="/upload" element={<UploadPage />} />
-					<Route path="/files/*" element={<FilesRoutes />} />
-					<Route path="/categories/*" element={<CategoryRoutes />} />
-					<Route path="/:uid" element={<IndexUIDPage />} />
-					<Route path="*" element={<NotFoundPage />} />
-				</Routes>
-			</main>
-			<Footer />
-		</>
-	);
+  return (
+    <>
+      <NavBar
+        isAuthenticated={isAuthenticated}
+        user={user}
+        navBarLinks={navBarRoutes}
+      />
+      <main>
+        <Routes>
+          <Route path="/" element={<IndexPage />} />
+          <Route path="/upload" element={<UploadPage />} />
+          <Route
+            path="/files/*"
+            element={
+              <ProtectedRoute requiredPermissions={["view:files"]}>
+                <FilesRoutes />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/categories/*" element={<CategoryRoutes />} />
+          <Route path="/:uid" element={<IndexUIDPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </main>
+      <Footer />
+    </>
+  );
 }
 
 export default App;
