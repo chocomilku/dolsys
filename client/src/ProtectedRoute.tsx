@@ -1,8 +1,8 @@
 import { Scopes } from "../../interfaces/Scopes";
-import { decodeToken } from "react-jwt";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
 import React, { useEffect } from "react";
+import { isUserHavePermission } from "./utils/permissionCheck";
 
 interface ProtectedRouteProps {
   requiredPermissions: Scopes[];
@@ -22,14 +22,7 @@ export const ProtectedRoute = ({
     const checkPermissions = async () => {
       try {
         const token = await getAccessTokenSilently();
-        const decodedToken = decodeToken(token);
-
-        const permissions = (decodedToken as { permissions: Scopes[] })
-          .permissions;
-
-        const hasPermissions = requiredPermissions.every((p) =>
-          permissions.includes(p)
-        );
+        const hasPermissions = isUserHavePermission(token, requiredPermissions);
 
         setHasPermissions(hasPermissions);
         setIsLoading(false);
