@@ -1,7 +1,7 @@
 {
 	"name": "dolsys-server",
 	"main": "server.ts",
-	"version": "0.5.1-dev",
+	"version": "0.6.0-beta",
 	"scripts": {
 		"start": "ts-node .",
 		"dev": "ts-node-dev --respawn .",

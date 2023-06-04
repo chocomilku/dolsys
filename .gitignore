@@ -5,3 +5,4 @@ uploads/
 .flaskenv*
 !.env.project
 !.env.vault
+server/public

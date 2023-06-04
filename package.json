@@ -1,6 +1,6 @@
 {
 	"name": "dolsys",
-	"version": "0.7.3-dev",
+	"version": "0.8.1-beta",
 	"scripts": {
 		"client:dev": "cd client && npm run dev",
 		"client:build": "cd client && npm run build",
@@ -10,7 +10,8 @@
 		"dolsys:dev": "concurrently --names 'client,server' --prefix-colors 'bgCyan.bold,bgMagenta.bold' \"npm run client:dev\" \"npm run server:dev\"",
 		"dolsys:start": "concurrently --names 'client,server' --prefix-colors 'bgCyan.bold,bgMagenta.bold' \"npm run client:start\" \"npm run server:start\"",
 		"db:migrate": "cd server && npm run knex:migrate",
-		"db:rollback": "cd server && npm run knex:rollback"
+		"db:rollback": "cd server && npm run knex:rollback",
+		"build": "npm run client:build && rm -rf server/public && cp -r client/dist server/public"
 	},
 	"author": "chocomilku",
 	"license": "MIT",
