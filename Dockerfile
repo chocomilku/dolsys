@@ -8,16 +8,16 @@ COPY package*.json ./
 COPY interfaces ./interfaces
 COPY utils ./utils
 
-RUN npm install
+RUN npm ci
 
 COPY client ./client
 COPY server ./server
 
 WORKDIR /app/client
-RUN npm install
+RUN npm ci
 
 WORKDIR /app/server
-RUN npm install
+RUN npm ci
 
 WORKDIR /app
 RUN npm run build
