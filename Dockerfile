@@ -1,4 +1,5 @@
 FROM node:18.16.0-alpine
+RUN apk add g++ make py3-pip
 
 ARG APP_VERSION
 
