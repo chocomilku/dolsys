@@ -2,8 +2,9 @@ import type { Knex } from "knex";
 import dotenv from "dotenv";
 import path from "path";
 
-dotenv.config(
-	process.env.NODE_ENV != "production" ? { path: path.join(__dirname, "../../.env") } :{});
+dotenv.config({
+	path: path.join(__dirname, "../.env"),
+});
 // Update with your config settings.
 
 const config: { [key: string]: Knex.Config } = {

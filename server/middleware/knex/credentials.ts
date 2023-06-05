@@ -1,9 +1,8 @@
 import knex from "knex";
 import dotenv from "dotenv";
 import path from "path";
-
-dotenv.config(
-	process.env.NODE_ENV != "production" ? { path: path.join(__dirname, "../../.env") } :{});
+	
+dotenv.config({ path: path.join(__dirname, "../../../.env") });
 
 export const db = knex({
 	client: "mysql2",
