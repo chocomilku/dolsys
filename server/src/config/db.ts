@@ -1,13 +1,10 @@
 import knex from "knex";
-import dotenv from "dotenv";
-import path from "path";
-	
-dotenv.config({ path: path.join(__dirname, "../../../.env") });
+import { secrets } from "./secrets";
 
 export const db = knex({
 	client: "mysql2",
 	connection: {
-		uri: process.env.DB_URL,
-		database: process.env.DB_DB,
+		uri: secrets.DB_URL,
+		database: secrets.DB_DB,
 	},
 });
