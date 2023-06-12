@@ -7,7 +7,9 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
+    environment:
+      name: production
+      url: https://dolsys.tech
     steps:
     - name: Deploy to DigitalOcean
       uses: appleboy/ssh-action@v0.1.10
