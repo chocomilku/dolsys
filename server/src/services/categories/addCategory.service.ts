@@ -1,7 +1,7 @@
 import { db } from "../../config/db";
 import { Category, CategoryWithoutID } from "../../../../interfaces/Category";
 import { validateCategory } from "../../validators/categoryValidator";
-import { InternalServerError } from "../../../middleware/errors/errors";
+import { InternalServerError } from "../../middleware/errors/errors";
 
 export const addCategoryToDB = async (category: CategoryWithoutID) => {
 

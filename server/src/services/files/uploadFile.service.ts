@@ -1,14 +1,13 @@
-import { db } from "../middleware/knex/credentials";
+import { Category } from "../../../../interfaces/Category";
+import { FileUpload, File, FileUploadWithUid } from "../../../../interfaces/File";
+import { db } from "../../config/db";
 import * as nanoid from "nanoid";
-import { BadRequestError } from "../middleware/errors/errors";
-import { FileUpload, FileUploadWithUid, File } from "../../interfaces/File";
-import { Category } from "../../interfaces/Category";
+import { BadRequestError } from "../../middleware/errors/errors";
+import { getFileMetadata } from "../../utils/getFileMetadata";
 
 const UID_LENGTH = 10;
 
-export const addFileMetadata = async (file: FileUpload) => {
-	if (!file.category_id)
-		throw new BadRequestError("Category ID is not defined");
+export const uploadFile = async (file: FileUpload) => {
 
 	// this is the implementation of referential integrity on application level because PlanetScale doesn't support foreign keys
 	const isCategoryIdValid = await validateCategoryId(file.category_id);
@@ -27,8 +26,10 @@ export const addFileMetadata = async (file: FileUpload) => {
 		...file,
 		uid: await generateAndCheckUIDCollision(),
 	};
-	const response = await db("files").insert(finalizedFile);
-	return response;
+	const [addedFileID] = await db("files").insert(finalizedFile);
+	
+	const addedFile = await getFileMetadata({ id: addedFileID });
+	return addedFile;
 };
 
 const generateUID = (length: number) => {
