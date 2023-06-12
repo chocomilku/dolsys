@@ -21,7 +21,7 @@ export const uploadFile = async (
 		access_token,
 		{
 			method: "POST",
-			url: "/upload",
+			url: "/files",
 			data: formData,
 			headers: {
 				"Content-Type": "multipart/form-data",
